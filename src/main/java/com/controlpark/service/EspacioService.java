@@ -24,6 +24,19 @@ public class EspacioService {
         return espacioRepository.findByEstado(EstadoEspacio.DISPONIBLE);
     }
 
+    public List<Espacio> filtrarEspacios(
+            Zona zona,
+            EstadoEspacio estado,
+            TipoVehiculo tipoVehiculo) {
+
+        return espacioRepository.findAll().stream()
+                .filter(e -> zona == null || e.getZona() == zona)
+                .filter(e -> estado == null || e.getEstado() == estado)
+                .filter(e -> tipoVehiculo == null ||
+                        e.getTipoVehiculo() == tipoVehiculo)
+                .toList();
+    }
+
     public List<Espacio> filtrarDisponibles(Rol rol, TipoVehiculo tipo) {
         List<Espacio> disponibles = espacioRepository
                 .findByTipoVehiculoAndEstado(tipo, EstadoEspacio.DISPONIBLE);

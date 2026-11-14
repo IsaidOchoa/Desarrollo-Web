@@ -1,9 +1,12 @@
+
 package com.controlpark.controller;
 
 import com.controlpark.dto.EspacioResponse;
 import com.controlpark.model.Espacio;
+import com.controlpark.model.EstadoEspacio;
 import com.controlpark.model.Rol;
 import com.controlpark.model.TipoVehiculo;
+import com.controlpark.model.Zona;
 import com.controlpark.service.EspacioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +24,13 @@ public class EspacioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EspacioResponse>> listarTodos() {
-        List<EspacioResponse> espacios = espacioService.listarTodos()
+    public ResponseEntity<List<EspacioResponse>> listarTodos(
+            @RequestParam(required = false) Zona zona,
+            @RequestParam(required = false) EstadoEspacio estado,
+            @RequestParam(required = false) TipoVehiculo tipoVehiculo) {
+
+        List<EspacioResponse> espacios = espacioService
+                .filtrarEspacios(zona, estado, tipoVehiculo)
                 .stream()
                 .map(this::convertirAResponse)
                 .toList();

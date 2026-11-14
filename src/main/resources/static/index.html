@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ControlPark</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+
+<body>
+    <main class="login-container">
+        <section class="login-brand">
+            <div class="brand-content">
+                <div class="brand-icon">P</div>
+                <h1>ControlPark</h1>
+                <p>Consulta la disponibilidad del estacionamiento antes de llegar.</p>
+            </div>
+            <div class="brand-footer">
+                Sistema de gestión de espacios universitarios
+            </div>
+        </section>
+
+        <section class="login-section">
+            <div class="login-card">
+                <div class="login-heading">
+                    <h2>Bienvenido</h2>
+                    <p>Ingresa con tu cuenta institucional</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="correo">Correo institucional</label>
+                        <input type="email" id="correo" name="correo" placeholder="zs00000000@correo.uv.mx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" placeholder="******" required>
+                    </div>
+
+                    <p id="loginMessage" class="message"></p>
+
+                    <button type="submit" id="loginButton">
+                        Iniciar sesión
+                    </button>
+                </form>
+
+                <p class="login-note">
+                    Acceso exclusivo para usuarios institucionales.
+                </p>
+            </div>
+        </section>
+    </main>
+    <script src="/js/api.js"></script>
+    <script src="/js/login.js"></script>
+</body>
+
+</html>

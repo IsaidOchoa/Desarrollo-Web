@@ -3,8 +3,10 @@ package com.controlpark.service;
 
 import com.controlpark.model.*;
 import com.controlpark.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -30,40 +32,51 @@ public class OcupacionService {
     @Transactional
     public Ocupacion ocupar(Long idUsuario, Long idVehiculo, Long idEspacio) {
         Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
         Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
-                .orElseThrow(() -> new IllegalArgumentException("Vehículo no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Vehículo no encontrado"));
 
         Espacio espacio = espacioRepository.findById(idEspacio)
-                .orElseThrow(() -> new IllegalArgumentException("Espacio no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Espacio no encontrado"));
 
         if (!vehiculo.getUsuario().getIdUsuario().equals(idUsuario)) {
-            throw new IllegalArgumentException("El vehículo no pertenece al usuario");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN, "El vehículo no pertenece al usuario");
         }
 
         if (ocupacionRepository.findByUsuarioIdUsuario(idUsuario).isPresent()) {
-            throw new IllegalArgumentException("El usuario ya tiene una ocupación activa");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El usuario ya tiene una ocupación activa");
         }
 
         if (ocupacionRepository.findByVehiculoIdVehiculo(idVehiculo).isPresent()) {
-            throw new IllegalArgumentException("El vehículo ya tiene una ocupación activa");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El vehículo ya tiene una ocupación activa");
         }
 
         if (ocupacionRepository.findByEspacioIdEspacio(idEspacio).isPresent()) {
-            throw new IllegalArgumentException("El espacio ya está ocupado");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El espacio ya está ocupado");
         }
 
         if (espacio.getEstado() != EstadoEspacio.DISPONIBLE) {
-            throw new IllegalArgumentException("El espacio no está disponible");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El espacio no está disponible");
         }
 
         if (espacio.getTipoVehiculo() != vehiculo.getTipo()) {
-            throw new IllegalArgumentException("El tipo de vehículo no corresponde al espacio");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El tipo de vehículo no corresponde al espacio");
         }
 
         if (usuario.getRol() == Rol.ALUMNO && espacio.getZona() != Zona.GENERAL) {
-            throw new IllegalArgumentException("Los alumnos solo pueden utilizar espacios generales");
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "Los alumnos solo pueden utilizar espacios generales");
         }
 
         if (usuario.getRol() == Rol.DOCENTE && espacio.getZona() == Zona.GENERAL) {
@@ -73,15 +86,19 @@ public class OcupacionService {
                     .anyMatch(e -> e.getTipoVehiculo() == vehiculo.getTipo());
 
             if (hayEspaciosDocentes) {
-                throw new IllegalArgumentException("Debes utilizar primero los espacios para docentes");
+                throw new ResponseStatusException(
+                        HttpStatus.CONFLICT,
+                        "Debes utilizar primero los espacios para docentes");
             }
         }
 
         LocalDateTime ahora = LocalDateTime.now();
-        LocalDateTime limite = ahora.toLocalDate().atTime(23, 55);
+        LocalDateTime limite = ahora.toLocalDate().atTime(21, 0);
 
         if (!ahora.isBefore(limite)) {
-            throw new IllegalArgumentException("No se permiten nuevas ocupaciones después de las 21:00");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No se permiten nuevas ocupaciones después de las 21:00");
         }
 
         LocalDateTime vencimiento = ahora.plusHours(3);
@@ -110,12 +127,14 @@ public class OcupacionService {
     @Transactional
     public Ocupacion extender(Long idUsuario) {
         Ocupacion ocupacion = ocupacionRepository.findByUsuarioIdUsuario(idUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("No tienes una ocupación activa"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "No tienes una ocupación activa"));
 
         LocalDateTime ahora = LocalDateTime.now();
 
         if (ahora.isAfter(ocupacion.getFechaVencimiento())) {
-            throw new IllegalArgumentException("El tiempo de respuesta ha terminado");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT, "El tiempo de respuesta ha terminado");
         }
 
         LocalDateTime limite = ahora.toLocalDate().atTime(21, 0);
@@ -126,7 +145,9 @@ public class OcupacionService {
         }
 
         if (!nuevoVencimiento.isAfter(ocupacion.getFechaVencimiento())) {
-            throw new IllegalArgumentException("La ocupación ya alcanzó el límite de las 21:00");
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "La ocupación ya alcanzó el límite de las 21:00");
         }
 
         ocupacion.setFechaVencimiento(nuevoVencimiento);
@@ -137,7 +158,8 @@ public class OcupacionService {
     @Transactional
     public void liberarPorUsuario(Long idUsuario) {
         Ocupacion ocupacion = ocupacionRepository.findByUsuarioIdUsuario(idUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("No tienes una ocupación activa"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "No tienes una ocupación activa"));
 
         liberarOcupacion(ocupacion);
     }
@@ -171,7 +193,8 @@ public class OcupacionService {
 
     private Ocupacion obtenerOcupacion(Long idOcupacion) {
         return ocupacionRepository.findById(idOcupacion)
-                .orElseThrow(() -> new IllegalArgumentException("Ocupación no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Ocupación no encontrada"));
     }
 
     private void liberarOcupacion(Ocupacion ocupacion) {

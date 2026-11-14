@@ -1,3 +1,4 @@
+
 package com.controlpark.controller;
 
 import com.controlpark.dto.VehiculoRequest;
@@ -43,6 +44,22 @@ public class VehiculoController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(convertirAResponse(guardado));
+    }
+
+    @PutMapping("/{idVehiculo}")
+    public ResponseEntity<VehiculoResponse> actualizar(
+            @PathVariable Long idUsuario,
+            @PathVariable Long idVehiculo,
+            @RequestBody VehiculoRequest request) {
+
+        Vehiculo datos = new Vehiculo();
+        datos.setTipo(request.tipo());
+        datos.setPlacas(request.placas());
+
+        Vehiculo actualizado = vehiculoService.actualizar(
+                idVehiculo, idUsuario, datos);
+
+        return ResponseEntity.ok(convertirAResponse(actualizado));
     }
 
     @DeleteMapping("/{idVehiculo}")
