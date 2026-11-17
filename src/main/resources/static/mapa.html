@@ -15,132 +15,251 @@
                 <div class="brand-icon">P</div>
                 <div>
                     <h1>ControlPark</h1>
-                    <p>Estacionamiento universitario</p>
+                    <span>Estacionamiento</span>
                 </div>
             </div>
 
-            <section class="user-section">
-                <span class="section-label">SESIÓN ACTIVA</span>
-                <p id="usuarioCorreo">Cargando usuario...</p>
-                <span id="usuarioRol" class="role-label"></span>
-            </section>
+            <div class="user-session">
+                <span class="session-label">Sesión iniciada</span>
+                <strong id="userEmail"></strong>
+                <span id="userRole" class="user-role"></span>
+            </div>
 
-            <nav class="navigation">
-                <span class="section-label">MENÚ PRINCIPAL</span>
-                <button class="nav-button active" data-view="mapa">
-                    <span class="nav-icon">⌖</span>
+            <nav class="main-navigation">
+                <button class="nav-button active" data-view="map" type="button">
+                    <span>⌖</span>
                     Mapa
                 </button>
-                <button class="nav-button" data-view="vehiculos">
-                    <span class="nav-icon">▰</span>
+                <button class="nav-button" data-view="vehicles" type="button">
+                    <span>▣</span>
                     Mis vehículos
                 </button>
-                <button class="nav-button" data-view="notificaciones">
-                    <span class="nav-icon">♧</span>
+                <button class="nav-button" data-view="notifications" type="button">
+                    <span>♧</span>
                     Notificaciones
                 </button>
             </nav>
 
-            <div class="sidebar-footer">
-                <button id="logoutButton" class="logout-button">Cerrar sesión</button>
-            </div>
+            <button id="logoutButton" class="logout-button" type="button">
+                Cerrar sesión
+            </button>
         </aside>
 
         <main class="map-section">
-            <header class="map-header">
+            <header class="page-header">
                 <div>
-                    <span class="section-label">VISTA GENERAL</span>
-                    <h2 id="viewTitle">Estacionamiento</h2>
+                    <h2 id="pageTitle">Mapa del estacionamiento</h2>
                 </div>
-                <button id="refreshButton" class="refresh-button">Actualizar mapa</button>
+
+                <button id="refreshButton" class="refresh-button" type="button">
+                    <span>↻</span>
+                    Actualizar
+                </button>
             </header>
 
-            <div id="mapView" class="view-content">
+            <section id="mapView" class="content-view">
                 <div class="map-container">
-                    <div class="vehicle-filter" role="group" aria-label="Filtrar espacios por tipo de vehículo">
-                        <button type="button" class="vehicle-filter-button active" data-tipo="AUTOMOVIL"
-                            aria-pressed="true">
-                            <span>🚗</span>
-                            Automóvil
-                        </button>
-                        <button type="button" class="vehicle-filter-button" data-tipo="MOTOCICLETA"
-                            aria-pressed="false">
-                            <span>🏍️</span>
-                            Motocicleta
-                        </button>
-                    </div>
 
-                    <div id="mapLoading" class="map-message">Cargando espacios...</div>
-                    <div id="mapError" class="map-message error-message hidden"></div>
-                    <div id="mapEmpty" class="map-message hidden">No hay espacios registrados para este tipo de
-                        vehículo.</div>
+                    <div class="map-toolbar">
+                        <div class="vehicle-filter">
+                            <button class="filter-button active" data-tipo="AUTOMOVIL" type="button">
+                                Automóviles
+                            </button>
 
-                    <svg id="parkingMap" viewBox="0 0 900 600" role="img" aria-label="Mapa del estacionamiento">
-                        <polygon points="450,35 850,235 450,435 50,235" class="ground" />
-                        <polygon points="50,235 450,435 450,485 50,285" class="ground-side" />
-                        <polygon points="450,435 850,235 850,285 450,485" class="ground-side-right" />
-
-                        <polygon points="450,70 805,247 450,425 95,247" class="road" />
-                        <path d="M450 70 L450 425" class="road-line" />
-                        <path d="M95 247 L805 247" class="road-line" />
-
-                        <polygon points="115,185 300,92 425,155 240,248" class="zone-general" />
-                        <polygon points="475,155 600,92 785,185 660,248" class="zone-teachers" />
-
-                        <text x="260" y="160" class="zone-title">GENERAL</text>
-                        <text x="630" y="160" class="zone-title">DOCENTES</text>
-
-                        <g id="parkingSpaces"></g>
-                    </svg>
-
-                    <div id="selectionPanel" class="selection-panel hidden">
-                        <button id="closeSelection" class="close-selection" aria-label="Cerrar">×</button>
-                        <span class="section-label">ESPACIO SELECCIONADO</span>
-                        <h3 id="selectedCode">G-01</h3>
-                        <p id="selectedZone"></p>
-                        <p id="selectedType"></p>
-                        <span id="selectedStatus" class="status-label"></span>
-
-                        <div id="occupancyActions" class="occupancy-actions hidden">
-                            <label for="vehicleSelect">Vehículo</label>
-                            <select id="vehicleSelect"></select>
-                            <p id="occupancyMessage"></p>
-                            <button id="occupancyButton" class="occupancy-button" type="button"></button>
+                            <button class="filter-button" data-tipo="MOTOCICLETA" type="button">
+                                Motocicletas
+                            </button>
                         </div>
 
+                        <div class="map-rotation-controls">
+                            <button id="rotateLeftButton" type="button" aria-label="Girar a la izquierda">
+                                ↶
+                            </button>
+
+                            <button id="resetRotationButton" type="button">
+                                Restablecer
+                            </button>
+
+                            <button id="rotateRightButton" type="button" aria-label="Girar a la derecha">
+                                ↷
+                            </button>
+                        </div>
                     </div>
+
+                    <div id="mapLoading" class="map-message">
+                        Cargando espacios...
+                    </div>
+
+                    <div id="mapError" class="map-message error-message hidden"></div>
+
+                    <div id="mapEmpty" class="map-message hidden">
+                        No hay espacios disponibles para este filtro.
+                    </div>
+
+                    <svg id="parkingMap" viewBox="0 0 1200 900" role="img"
+                        aria-label="Mapa isométrico del estacionamiento">
+
+                        <g id="mapScene">
+
+                            <!-- Terreno -->
+
+                            <g id="terrainLayer"></g>
+
+                            <!-- Calles e infraestructura -->
+                            <g id="infrastructureLayer"></g>
+
+                            <!-- Zonas de estacionamiento -->
+                            <g id="roadsLayer"></g>
+
+                            <!-- Edificios y construcciones -->
+                            <g id="buildingsLayer"></g>
+
+                            <!-- Cajones -->
+                            <g id="parkingSpaces"></g>
+
+                            <!-- Textos y señalización -->
+                            <g id="labelsLayer"></g>
+                    </svg>
+
+                    <!-- Leyenda del mapa -->
+                    <div class="map-legend">
+                        <span>
+                            <i class="legend-dot available"></i>
+                            Disponible
+                        </span>
+
+                        <span>
+                            <i class="legend-dot occupied"></i>
+                            Ocupado
+                        </span>
+
+                        <span>
+                            <i class="legend-dot review"></i>
+                            En revisión
+                        </span>
+
+                        <span>
+                            <i class="legend-dot unavailable"></i>
+                            Fuera de servicio
+                        </span>
+
+                        <span>
+                            <i class="legend-dot selected"></i>
+                            Tu espacio
+                        </span>
+                    </div>
+
+                    <!-- Tarjeta flotante de selección -->
+                    <section id="selectionPanel" class="selection-panel hidden" aria-labelledby="selectedCode">
+
+                        <div class="selection-header">
+                            <div>
+                                <span class="eyebrow">ESPACIO SELECCIONADO</span>
+                                <h3 id="selectedCode">-</h3>
+                            </div>
+
+                            <button id="closeSelectionButton" class="close-button" type="button"
+                                aria-label="Cerrar selección">
+                                ×
+                            </button>
+                        </div>
+
+                        <div class="selection-details">
+                            <div>
+                                <span>Zona</span>
+                                <strong id="selectedZone">-</strong>
+                            </div>
+
+                            <div>
+                                <span>Tipo</span>
+                                <strong id="selectedType">-</strong>
+                            </div>
+
+                            <div>
+                                <span>Estado</span>
+                                <strong id="selectedStatus">-</strong>
+                            </div>
+                        </div>
+
+                        <div id="occupancyActions" class="occupancy-actions"></div>
+                        <div id="occupancyMessage" class="occupancy-message"></div>
+                    </section>
+
                 </div>
 
-                <div class="availability-bar">
+                <!-- Resumen de disponibilidad -->
+                <section class="availability-section">
                     <div class="availability-heading">
-                        <strong>Ocupación del estacionamiento</strong>
-                        <span id="spaceCount">Consultando espacios...</span>
+                        <h3>Disponibilidad</h3>
+                        <span id="availabilityTotal">0 espacios</span>
                     </div>
-                    <div class="availability-track">
-                        <span id="availableBar" class="bar-available"></span>
-                        <span id="occupiedBar" class="bar-occupied"></span>
-                        <span id="reviewBar" class="bar-review"></span>
-                        <span id="unavailableBar" class="bar-unavailable"></span>
-                    </div>
-                    <div class="availability-details">
-                        <span><i class="legend-dot available-bg"></i> Disponibles: <b id="totalDisponibles">0</b></span>
-                        <span><i class="legend-dot occupied-bg"></i> Ocupados: <b id="totalOcupados">0</b></span>
-                        <span><i class="legend-dot review-bg"></i> En revisión: <b id="totalRevision">0</b></span>
-                        <span><i class="legend-dot unavailable-bg"></i> Fuera de servicio: <b
-                                id="totalFueraServicio">0</b></span>
-                    </div>
-                </div>
-            </div>
 
-            <div id="viewPlaceholder" class="view-placeholder hidden">
-                <h3 id="placeholderTitle"></h3>
-                <p>Esta sección estará disponible en la siguiente etapa de desarrollo.</p>
-            </div>
+                    <div class="availability-bar">
+                        <div id="availableBar" class="bar-segment available-bar">
+                        </div>
+
+                        <div id="occupiedBar" class="bar-segment occupied-bar">
+                        </div>
+
+                        <div id="reviewBar" class="bar-segment review-bar">
+                        </div>
+
+                        <div id="outOfServiceBar" class="bar-segment unavailable-bar">
+                        </div>
+                    </div>
+
+                    <div class="availability-counters">
+                        <div>
+                            <span class="counter-dot available"></span>
+                            Disponibles
+                            <strong id="availableCount">0</strong>
+                        </div>
+
+                        <div>
+                            <span class="counter-dot occupied"></span>
+                            Ocupados
+                            <strong id="occupiedCount">0</strong>
+                        </div>
+
+                        <div>
+                            <span class="counter-dot review"></span>
+                            En revisión
+                            <strong id="reviewCount">0</strong>
+                        </div>
+
+                        <div>
+                            <span class="counter-dot unavailable"></span>
+                            Fuera de servicio
+                            <strong id="outOfServiceCount">0</strong>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- Vista de vehículos -->
+            <section id="vehiclesView" class="content-view hidden">
+                <div class="placeholder-panel">
+                    <h3>Mis vehículos</h3>
+                    <p>
+                        La administración de vehículos estará disponible
+                        en esta sección.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Vista de notificaciones -->
+            <section id="notificationsView" class="content-view hidden">
+                <div class="placeholder-panel">
+                    <h3>Notificaciones</h3>
+                    <p>
+                        Las notificaciones del sistema aparecerán aquí.
+                    </p>
+                </div>
+            </section>
         </main>
     </div>
 
-    <script src="/js/api.js"></script>
-    <script src="/js/mapa.js"></script>
+    <script type="module" src="/js/app.js"></script>
 </body>
 
 </html>

@@ -1,3 +1,4 @@
+
 const API_URL = "/api";
 
 async function realizarSolicitud(endpoint, metodo = "GET", datos = null) {
@@ -13,7 +14,6 @@ async function realizarSolicitud(endpoint, metodo = "GET", datos = null) {
     }
 
     const respuesta = await fetch(`${API_URL}${endpoint}`, opciones);
-
     let resultado = null;
 
     if (respuesta.status !== 204) {
@@ -21,8 +21,12 @@ async function realizarSolicitud(endpoint, metodo = "GET", datos = null) {
     }
 
     if (!respuesta.ok) {
-        throw new Error(resultado?.mensaje || "No fue posible completar la solicitud.");
+        throw new Error(
+            resultado?.mensaje || "No fue posible completar la solicitud."
+        );
     }
 
     return resultado;
 }
+
+window.realizarSolicitud = realizarSolicitud;
