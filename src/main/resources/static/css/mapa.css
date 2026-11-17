@@ -304,7 +304,7 @@ button {
 /* Terreno */
 
 .terrain-top {
-    fill: #c9d8cc;
+    fill: rgba(25, 45, 65, 0.1);
     stroke: #9eafa2;
     stroke-width: 2;
 }
@@ -370,13 +370,13 @@ button {
 /* Edificios */
 
 .building {
-    fill: #d8dce1;
+    fill: #d9dde3;
     stroke: #8994a2;
     stroke-width: 2;
 }
 
 .building-side {
-    fill: #aeb8c2;
+    fill: #d9dde3;
     stroke: #8994a2;
     stroke-width: 1.5;
 }
@@ -1096,7 +1096,7 @@ button {
     }
 }
 .terrain-top {
-    fill: #e8e9e4;
+    fill: rgb(204 211 216);
     stroke: #c4c8c1;
     stroke-width: 2;
 }
@@ -1107,22 +1107,22 @@ button {
 }
 
 .zone-general {
-    fill: #dce9df;
+    fill: #c0dbc7;
     stroke: #80a88b;
 }
 
 .zone-docentes {
-    fill: #dce5f1;
+    fill: #b5c7d9;
     stroke: #829bb9;
 }
 
 .zone-motocicletas {
-    fill: #eee7d8;
+    fill: #eadcc0;
     stroke: #b7a47c;
 }
 
 .building {
-    fill: #b8bdc5;
+    fill: #d9dde3;
     stroke: #737b86;
     stroke-width: 2;
 }
@@ -1139,4 +1139,12 @@ button {
 
 .building-label {
     font-size: 13px;
+}
+
+.map-label {
+    font-size: 18px;
+    font-weight: bold;
+    fill: #243247;
+    letter-spacing: 1px;
+    pointer-events: none;
 }

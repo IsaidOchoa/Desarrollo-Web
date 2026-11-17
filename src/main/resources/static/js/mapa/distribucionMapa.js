@@ -12,8 +12,8 @@ const MAPA = {
                     puntos: [
                         [70, 100],
                         [640, 100],
-                        [640, 900],
-                        [500, 900],
+                        [640, 850],
+                        [500, 850],
                         [500, 230],
                         [70, 230]
                     ]
@@ -66,7 +66,7 @@ const MAPA = {
             x: 50,
             y: 240,
             ancho: 440,
-            alto: 660
+            alto: 610
         },
         edificioA: {
             nombre: "EDIFICIO A",
@@ -80,8 +80,16 @@ const MAPA = {
             x: 650,
             y: 810,
             ancho: 500,
-            alto: 90
+            alto: 40
+        },
+        muro: {
+            nombre: "MURO",
+            x: 50,
+            y: 50,
+            ancho: 440,
+            alto: 40
         }
+
     },
 
     filas: [
@@ -117,7 +125,7 @@ const MAPA = {
             zona: "GENERAL",
             tipo: "AUTOMOVIL",
             cantidad: 8,
-            inicio: 15,
+            inicio: 14,
             x: 450,
             y: 120,
             orientacion: "HORIZONTAL",
@@ -130,7 +138,7 @@ const MAPA = {
             zona: "GENERAL",
             tipo: "AUTOMOVIL",
             cantidad: 6,
-            inicio: 23,
+            inicio: 22,
             x: 620,
             y: 620,
             orientacion: "VERTICAL",
@@ -138,9 +146,6 @@ const MAPA = {
             direccionY: -1,
             separacion: 50
         },
-        
-        
-        
 
         // Estacionamiento para motocicletas: 14
         {
@@ -154,7 +159,7 @@ const MAPA = {
             orientacion: "Horizontal",
             direccionX: 0,
             direccionY: -1,
-            separacion: 15
+            separacion: 16
         },
         {
             prefijo: "GM-",
@@ -162,25 +167,26 @@ const MAPA = {
             tipo: "MOTOCICLETA",
             cantidad: 7,
             inicio: 8,
-            x: 420,
+            x: 400,
             y: 210,
             orientacion: "VERTICAL",
+            rotarEtiqueta: true,
             direccionX: 1,
             direccionY: 0,
-            separacion: 15
+            separacion: 16
         },
         {
             prefijo: "GM-",
             zona: "GENERAL",
             tipo: "MOTOCICLETA",
             cantidad: 7,
-            inicio: 14,
+            inicio: 15,
             x: 620,
             y: 330,
             orientacion: "Horizontal",
             direccionX: 0,
             direccionY: -1,
-            separacion: 15
+            separacion: 16
         },
 
         // Estacionamiento para docentes: 40 automóviles
@@ -230,8 +236,8 @@ function generarDistribucion() {
                 zona: fila.zona,
                 x: fila.x + i * fila.direccionX * fila.separacion,
                 y: fila.y + i * fila.direccionY * fila.separacion,
-                orientacion: fila.orientacion || "HORIZONTAL"
-            });
+                orientacion: fila.orientacion || "HORIZONTAL",
+                rotarEtiqueta: fila.rotarEtiqueta === true            });
         }
     });
 }

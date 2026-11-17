@@ -21,7 +21,7 @@ function crearElementoSVG(tipo, atributos = {}) {
 
 function obtenerDimensionesEspacio(tipo, orientacion = "HORIZONTAL") {
     const dimensiones = tipo === "MOTOCICLETA"
-        ? { ancho: 26, alto: 14 }
+        ? { ancho: 30, alto: 15 }
         : { ancho: 50, alto: 25 };
 
     if (orientacion === "VERTICAL") {
@@ -58,11 +58,16 @@ function crearEspacioSVG(espacio, posicion) {
         class: `space-shape ${obtenerClaseEstado(espacio.estado)}`
     });
 
+    const rotarEtiqueta = posicion.rotarEtiqueta === true;
+
     const etiqueta = crearElementoSVG("text", {
         x: posicion.x,
         y: posicion.y + 3,
         class: "space-label",
-        "text-anchor": "middle"
+        "text-anchor": "middle",
+        ...(rotarEtiqueta && {
+            transform: `rotate(-90 ${posicion.x} ${posicion.y})`
+        })
     });
 
     etiqueta.textContent = espacio.codigo;
@@ -74,6 +79,17 @@ function crearEspacioSVG(espacio, posicion) {
     }
 
     return grupo;
+}
+function crearEtiquetaMapa(texto, x, y) {
+    const etiqueta = crearElementoSVG("text", {
+        x,
+        y,
+        class: "map-label",
+        "text-anchor": "middle"
+    });
+
+    etiqueta.textContent = texto;
+    return etiqueta;
 }
 
 function actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva) {
@@ -244,6 +260,7 @@ export function renderizarInfraestructura(configuracion) {
     const zonasLayer = document.getElementById("roadsLayer");
     const edificiosLayer = document.getElementById("buildingsLayer");
     const etiquetasLayer = document.getElementById("labelsLayer");
+    const labelsLayer = document.getElementById("labelsLayer");
 
     if (!terrenoLayer || !zonasLayer || !edificiosLayer || !etiquetasLayer) {
         console.error("No se encontraron todas las capas del mapa.");
@@ -254,6 +271,10 @@ export function renderizarInfraestructura(configuracion) {
     limpiarCapa(zonasLayer);
     limpiarCapa(edificiosLayer);
     limpiarCapa(etiquetasLayer);
+
+    etiquetasLayer.appendChild(
+    crearEtiquetaMapa("SALIDA / ENTRADA", 580, 890)
+);
 
     // Terreno general
     terrenoLayer.appendChild(crearRectangulo({
