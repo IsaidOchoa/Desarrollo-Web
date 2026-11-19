@@ -6,6 +6,7 @@ import {
 
 import { inicializarNavegacion } from "./core/navigation.js";
 import { inicializarMapa } from "./mapa/mapa.js";
+import { inicializarVehiculos } from "./vehiculos.js";
 
 const usuario = verificarSesion();
 
@@ -26,4 +27,5 @@ if (usuario) {
 
     inicializarNavegacion();
     inicializarMapa(usuario);
+    inicializarVehiculos(usuario);
 }

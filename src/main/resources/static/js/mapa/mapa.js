@@ -23,17 +23,17 @@ export function inicializarMapa(usuario) {
     const configuracionMapa = obtenerConfiguracionMapa();
     const distribucionMapa = obtenerDistribucionMapa();
     console.table(
-    ["G-01", "D-01"].map(codigo => {
-        const posicion = distribucionMapa.get(codigo);
+        ["G-01", "D-01"].map(codigo => {
+            const posicion = distribucionMapa.get(codigo);
 
-        return {
-            codigo,
-            x: posicion?.x,
-            y: posicion?.y,
-            orientacion: posicion?.orientacion
-        };
-    })
-);
+            return {
+                codigo,
+                x: posicion?.x,
+                y: posicion?.y,
+                orientacion: posicion?.orientacion
+            };
+        })
+    );
     const elementosEspacio = new Map();
 
     console.log("Configuración utilizada por mapa.js:", configuracionMapa);
@@ -293,15 +293,10 @@ export function inicializarMapa(usuario) {
     }
 
     async function ocuparEspacio() {
-        if (!espacioSeleccionado || procesandoOcupacion) {
-            return;
-        }
+        if (!espacioSeleccionado || procesandoOcupacion) return;
 
         const selector = document.getElementById("vehicleSelect");
-
-        if (!selector) {
-            return;
-        }
+        if (!selector) return;
 
         procesandoOcupacion = true;
         actualizarAcciones(espacioSeleccionado);
@@ -314,14 +309,22 @@ export function inicializarMapa(usuario) {
 
             await cargarDatosUsuario();
             await cargarEspacios(true);
+
         } catch (error) {
             occupancyMessage.textContent =
                 error.message || "No fue posible ocupar el espacio.";
+
         } finally {
             procesandoOcupacion = false;
 
             if (espacioSeleccionado) {
+                const mensajeError = occupancyMessage.textContent;
+
                 actualizarAcciones(espacioSeleccionado);
+
+                if (mensajeError) {
+                    occupancyMessage.textContent = mensajeError;
+                }
             }
         }
     }
@@ -397,6 +400,23 @@ export function inicializarMapa(usuario) {
             tipoVehiculoActual = boton.dataset.tipo;
             actualizarFiltroVisual();
         });
+    });
+
+    const botonVistaMapa = document.querySelector('[data-view="map"]');
+
+    botonVistaMapa.addEventListener("click", async () => {
+        try {
+            await cargarDatosUsuario();
+
+            if (espacioSeleccionado) {
+                actualizarAcciones(espacioSeleccionado);
+            }
+        } catch (error) {
+            mapError.textContent =
+                error.message || "No fue posible actualizar los datos del usuario.";
+
+            mapError.classList.remove("hidden");
+        }
     });
 
     document.getElementById("refreshButton").addEventListener(

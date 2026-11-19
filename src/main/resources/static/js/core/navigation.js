@@ -24,7 +24,6 @@ export function inicializarNavegacion() {
     };
 
     const pageTitle = document.getElementById("pageTitle");
-    const pageDescription = document.getElementById("pageDescription");
     const refreshButton = document.getElementById("refreshButton");
 
     function cambiarVista(vista) {
@@ -41,8 +40,6 @@ export function inicializarNavegacion() {
         });
 
         pageTitle.textContent = titulos[vista][0];
-        pageDescription.textContent = titulos[vista][1];
-
         refreshButton.classList.toggle("hidden", vista !== "map");
     }
 

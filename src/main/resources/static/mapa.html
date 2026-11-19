@@ -236,16 +236,58 @@
                 </section>
             </section>
 
+
             <!-- Vista de vehículos -->
             <section id="vehiclesView" class="content-view hidden">
-                <div class="placeholder-panel">
-                    <h3>Mis vehículos</h3>
-                    <p>
-                        La administración de vehículos estará disponible
-                        en esta sección.
-                    </p>
+                <div class="vehicles-layout">
+                    <header class="vehicles-heading">
+                        <div>
+                            <h3>Mis vehículos</h3>
+                            <p>Administra los vehículos asociados a tu cuenta.</p>
+                        </div>
+
+                        <button id="addVehicleButton" class="add-vehicle-button" type="button">
+                            + Registrar vehículo
+                        </button>
+                    </header>
+
+                    <form id="vehicleForm" class="vehicle-form hidden">
+                        <h4>Registrar nuevo vehículo</h4>
+
+                        <div class="vehicle-form-fields">
+                            <label>
+                                Tipo de vehículo
+                                <select id="vehicleType" required>
+                                    <option value="">Selecciona un tipo</option>
+                                    <option value="AUTOMOVIL">Automóvil</option>
+                                    <option value="MOTOCICLETA">Motocicleta</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Placas
+                                <input id="vehiclePlates" type="text" maxlength="15" placeholder="Ej. ABC-123"
+                                    autocomplete="off" required>
+                            </label>
+                        </div>
+
+                        <div class="vehicle-form-actions">
+                            <button id="cancelVehicleButton" class="cancel-button" type="button">
+                                Cancelar
+                            </button>
+
+                            <button id="saveVehicleButton" class="add-vehicle-button" type="submit">
+                                Guardar vehículo
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="vehicleMessage" class="vehicle-message" role="status"></div>
+
+                    <div id="vehiclesList" class="vehicles-grid"></div>
                 </div>
             </section>
+
 
             <!-- Vista de notificaciones -->
             <section id="notificationsView" class="content-view hidden">

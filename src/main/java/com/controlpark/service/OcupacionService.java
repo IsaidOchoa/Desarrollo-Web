@@ -93,7 +93,7 @@ public class OcupacionService {
         }
 
         LocalDateTime ahora = LocalDateTime.now();
-        LocalDateTime limite = ahora.toLocalDate().atTime(21, 0);
+        LocalDateTime limite = ahora.toLocalDate().atTime(21, 45);
 
         if (!ahora.isBefore(limite)) {
             throw new ResponseStatusException(
