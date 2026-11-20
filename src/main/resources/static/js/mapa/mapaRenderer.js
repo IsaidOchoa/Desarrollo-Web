@@ -92,7 +92,7 @@ function crearEtiquetaMapa(texto, x, y) {
     return etiqueta;
 }
 
-function actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva) {
+function actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva, esAlumno) {
     elemento.dataset.id = espacio.idEspacio;
     elemento.dataset.tipo = espacio.tipoVehiculo;
 
@@ -119,6 +119,10 @@ function actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva) {
         Number(ocupacionActiva.idEspacio) === Number(espacio.idEspacio);
 
     elemento.classList.toggle("my-space", Boolean(esMiEspacio));
+    elemento.classList.toggle(
+        "teacher-restricted",
+        esAlumno && espacio.zona === "DOCENTES"
+    );
 }
 
 export function sincronizarEspacios(
@@ -126,7 +130,8 @@ export function sincronizarEspacios(
     distribucion,
     parkingSpaces,
     elementosEspacio,
-    ocupacionActiva
+    ocupacionActiva,
+    esAlumno = false
 ) {
     const codigosActuales = new Set();
 
@@ -145,7 +150,7 @@ export function sincronizarEspacios(
             elementosEspacio.set(espacio.codigo, elemento);
         }
 
-        actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva);
+        actualizarEspacioSVG(elemento, espacio, posicion, ocupacionActiva, esAlumno);
     });
 
     elementosEspacio.forEach((elemento, codigo) => {
@@ -273,8 +278,8 @@ export function renderizarInfraestructura(configuracion) {
     limpiarCapa(etiquetasLayer);
 
     etiquetasLayer.appendChild(
-    crearEtiquetaMapa("SALIDA / ENTRADA", 580, 890)
-);
+        crearEtiquetaMapa("SALIDA / ENTRADA", 580, 890)
+    );
 
     // Terreno general
     terrenoLayer.appendChild(crearRectangulo({

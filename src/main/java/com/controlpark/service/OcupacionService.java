@@ -151,6 +151,7 @@ public class OcupacionService {
         }
 
         ocupacion.setFechaVencimiento(nuevoVencimiento);
+        ocupacion.setAvisoEnviado(false);
 
         return ocupacionRepository.save(ocupacion);
     }

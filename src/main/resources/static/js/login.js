@@ -1,3 +1,6 @@
+
+import { realizarSolicitud } from "./apiModule.js";
+
 const formularioLogin = document.getElementById("loginForm");
 const mensajeLogin = document.getElementById("loginMessage");
 const botonLogin = document.getElementById("loginButton");
@@ -19,7 +22,6 @@ formularioLogin.addEventListener("submit", async (evento) => {
         });
 
         sessionStorage.setItem("usuarioControlPark", JSON.stringify(usuario));
-
         window.location.href = "/mapa.html";
     } catch (error) {
         mensajeLogin.style.color = "#c0392b";

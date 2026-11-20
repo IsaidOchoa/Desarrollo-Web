@@ -71,19 +71,6 @@
                             </button>
                         </div>
 
-                        <div class="map-rotation-controls">
-                            <button id="rotateLeftButton" type="button" aria-label="Girar a la izquierda">
-                                ↶
-                            </button>
-
-                            <button id="resetRotationButton" type="button">
-                                Restablecer
-                            </button>
-
-                            <button id="rotateRightButton" type="button" aria-label="Girar a la derecha">
-                                ↷
-                            </button>
-                        </div>
                     </div>
 
                     <div id="mapLoading" class="map-message">
@@ -291,11 +278,20 @@
 
             <!-- Vista de notificaciones -->
             <section id="notificationsView" class="content-view hidden">
-                <div class="placeholder-panel">
-                    <h3>Notificaciones</h3>
-                    <p>
-                        Las notificaciones del sistema aparecerán aquí.
-                    </p>
+                <div class="notifications-container">
+                    <div class="notifications-header">
+                        <div>
+                            <h2>Notificaciones</h2>
+                            <p>Consulta los avisos relacionados con tu estacionamiento.</p>
+                        </div>
+                        <button id="refreshNotificationsButton" class="secondary-button">
+                            Actualizar
+                        </button>
+                    </div>
+
+                    <div id="notificationsList" class="notifications-list">
+                        <p class="notifications-loading">Cargando notificaciones...</p>
+                    </div>
                 </div>
             </section>
         </main>

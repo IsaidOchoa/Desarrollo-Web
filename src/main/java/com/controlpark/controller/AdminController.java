@@ -6,6 +6,7 @@ import com.controlpark.dto.EspacioResponse;
 import com.controlpark.model.Espacio;
 import com.controlpark.service.EspacioService;
 import com.controlpark.service.OcupacionService;
+import com.controlpark.service.OcupacionNotificacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final OcupacionService ocupacionService;
+    private final OcupacionNotificacionService ocupacionNotificacionService;
     private final EspacioService espacioService;
 
     public AdminController(
             OcupacionService ocupacionService,
+            OcupacionNotificacionService ocupacionNotificacionService,
             EspacioService espacioService) {
         this.ocupacionService = ocupacionService;
+        this.ocupacionNotificacionService = ocupacionNotificacionService;
         this.espacioService = espacioService;
     }
 
@@ -36,7 +40,7 @@ public class AdminController {
     public ResponseEntity<Void> liberarOcupacion(
             @PathVariable Long idOcupacion) {
 
-        ocupacionService.liberarPorAdministrador(idOcupacion);
+        ocupacionNotificacionService.liberarPorAdministrador(idOcupacion);
 
         return ResponseEntity.noContent().build();
     }

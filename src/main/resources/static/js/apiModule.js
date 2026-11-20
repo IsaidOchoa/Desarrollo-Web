@@ -21,12 +21,12 @@ export async function realizarSolicitud(endpoint, metodo = "GET", datos = null) 
     }
 
     if (!respuesta.ok) {
-    throw new Error(
-        resultado?.message ||
-        resultado?.mensaje ||
-        "No fue posible completar la solicitud."
-    );
-}
+        throw new Error(
+            resultado?.message ||
+            resultado?.mensaje ||
+            "No fue posible completar la solicitud."
+        );
+    }
 
     return resultado;
 }

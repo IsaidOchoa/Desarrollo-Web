@@ -1,4 +1,4 @@
-
+/* mapa.css */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -295,122 +295,6 @@ button {
     object-fit: contain;
 }
 
-#mapScene {
-    transform-box: view-box;
-    transform-origin: center;
-    transition: transform 0.35s ease;
-}
-
-/* Terreno */
-
-.terrain-top {
-    fill: rgba(25, 45, 65, 0.1);
-    stroke: #9eafa2;
-    stroke-width: 2;
-}
-
-.terrain-side {
-    fill: #aebfc0;
-}
-
-.terrain-side-right {
-    fill: #b9c8c8;
-}
-
-/* Calles */
-
-.outer-road,
-.inner-road {
-    fill: #87949b;
-    stroke: #f1f3f2;
-    stroke-width: 3;
-}
-
-.road-edge {
-    fill: none;
-    stroke: #dce2df;
-    stroke-width: 2;
-}
-
-.road-center-line {
-    fill: none;
-    stroke: #dce2df;
-    stroke-width: 2;
-    stroke-dasharray: 12 12;
-}
-
-.circulation-arrow {
-    fill: none;
-    stroke: #f5f7f5;
-    stroke-width: 3;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
-
-/* Zonas */
-
-.general-zone {
-    fill: var(--general);
-    stroke: #78947e;
-    stroke-width: 2;
-}
-
-.teacher-zone {
-    fill: var(--teacher);
-    stroke: #7894b0;
-    stroke-width: 2;
-}
-
-.common-zone {
-    fill: #c6d5c8;
-    stroke: #91a795;
-    stroke-width: 2;
-}
-
-/* Edificios */
-
-.building {
-    fill: #d9dde3;
-    stroke: #8994a2;
-    stroke-width: 2;
-}
-
-.building-side {
-    fill: #d9dde3;
-    stroke: #8994a2;
-    stroke-width: 1.5;
-}
-
-.building-side-right {
-    fill: #bac3cc;
-    stroke: #8994a2;
-    stroke-width: 1.5;
-}
-
-.map-label {
-    fill: #526174;
-    font-size: 12px;
-    font-weight: bold;
-    text-anchor: middle;
-}
-
-.building-label {
-    fill: #34445a;
-    font-size: 15px;
-}
-
-.zone-label {
-    fill: #29435a;
-    font-size: 15px;
-    font-weight: bold;
-}
-
-.entrance-label {
-    fill: #526174;
-    font-size: 12px;
-    font-weight: bold;
-}
-
 /* Cajones generados por JavaScript */
 
 .parking-space {
@@ -529,50 +413,6 @@ button {
 
 .filter-button.active:hover {
     background: var(--primary-hover);
-}
-
-/* Rotación */
-
-.map-rotation-controls {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
-    box-shadow: 0 3px 12px rgba(25, 45, 65, 0.14);
-}
-
-.map-rotation-controls button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 36px;
-    height: 36px;
-    padding: 0 9px;
-    border: none;
-    border-radius: 6px;
-    background: transparent;
-    color: #526174;
-    font-size: 17px;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-}
-
-.map-rotation-controls button:hover {
-    background: #eaf1f8;
-    color: var(--primary);
-}
-
-.map-rotation-controls button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-#resetRotationButton {
-    font-size: 11px;
-    font-weight: bold;
 }
 
 /* Leyenda */
@@ -937,12 +777,6 @@ button {
         font-size: 11px;
     }
 
-    .map-rotation-controls button {
-        min-width: 30px;
-        height: 32px;
-        padding: 0 6px;
-    }
-
     .map-legend {
         left: 10px;
         bottom: 10px;
@@ -1047,20 +881,6 @@ button {
         min-width: 0;
         padding: 9px 5px;
         font-size: 10px;
-    }
-
-    .map-rotation-controls {
-        flex: 0 0 auto;
-    }
-
-    .map-rotation-controls button {
-        min-width: 29px;
-        height: 30px;
-        font-size: 14px;
-    }
-
-    #resetRotationButton {
-        font-size: 9px;
     }
 
     .map-legend {
@@ -1357,4 +1177,186 @@ button {
         flex-wrap: wrap;
     }
 }
+
+/* Espacios exclusivos para docentes vistos por alumnos */
+
+.parking-space.teacher-restricted {
+    cursor: not-allowed;
+}
+
+.parking-space.teacher-restricted .space-shape {
+    opacity: 0.55;
+}
+
+.parking-space.teacher-restricted .space-label {
+    opacity: 0.75;
+}
+
+.parking-space.teacher-restricted:hover {
+    filter: none;
+}
+
+.parking-space.teacher-restricted:hover .space-shape {
+    stroke: #ffffff;
+    stroke-width: 2;
+}
+
+
+/* Notificaciones */
+.notifications-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.notifications-header h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.notifications-header p {
+    color: #718096;
+    font-size: 14px;
+}
+
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.notification-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.notification-action {
+    border-left: 4px solid #3182ce;
+}
+
+.notification-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #edf2f7;
+    border-radius: 50%;
+    font-size: 19px;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.notification-title h3 {
+    font-size: 15px;
+    color: #2d3748;
+}
+
+.notification-content > p {
+    color: #4a5568;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.notification-status {
+    padding: 4px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    white-space: nowrap;
+    background: #edf2f7;
+    color: #4a5568;
+}
+
+.status-pendiente {
+    background: #ebf8ff;
+    color: #2b6cb0;
+}
+
+.status-atendida {
+    background: #f0fff4;
+    color: #276749;
+}
+
+.status-expirada {
+    background: #fff5f5;
+    color: #c53030;
+}
+
+.notification-date {
+    display: block;
+    margin-top: 12px;
+    color: #718096;
+    font-size: 12px;
+}
+
+.notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.notifications-empty,
+.notifications-loading {
+    padding: 40px 20px;
+    text-align: center;
+    color: #718096;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.notifications-empty p {
+    margin-bottom: 8px;
+    color: #4a5568;
+}
+
+@media (max-width: 600px) {
+    .notifications-header {
+        align-items: flex-start;
+    }
+
+    .notification-card {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .notification-title {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .notification-actions {
+        flex-direction: column;
+    }
+
+    .notification-actions button {
+        width: 100%;
+    }
+}
+
 

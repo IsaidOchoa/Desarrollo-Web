@@ -3,17 +3,24 @@ package com.controlpark.service;
 
 import com.controlpark.model.*;
 import com.controlpark.repository.EspacioRepository;
+import com.controlpark.repository.OcupacionRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
 public class EspacioService {
 
     private final EspacioRepository espacioRepository;
+    private final OcupacionRepository ocupacionRepository;
 
-    public EspacioService(EspacioRepository espacioRepository) {
+    public EspacioService(
+            EspacioRepository espacioRepository,
+            OcupacionRepository ocupacionRepository) {
         this.espacioRepository = espacioRepository;
+        this.ocupacionRepository = ocupacionRepository;
     }
 
     public List<Espacio> listarTodos() {
@@ -67,7 +74,15 @@ public class EspacioService {
     @Transactional
     public Espacio cambiarEstado(Long idEspacio, EstadoEspacio estado) {
         Espacio espacio = espacioRepository.findById(idEspacio)
-                .orElseThrow(() -> new IllegalArgumentException("Espacio no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Espacio no encontrado"));
+
+        if (estado == EstadoEspacio.DISPONIBLE &&
+                ocupacionRepository.findByEspacioIdEspacio(idEspacio).isPresent()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "No puedes liberar directamente un espacio con una ocupación activa. Utiliza la opción de liberar ocupación.");
+        }
 
         espacio.setEstado(estado);
 

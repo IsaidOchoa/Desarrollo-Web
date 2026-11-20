@@ -31,6 +31,9 @@ public class Ocupacion {
     @Column(name = "fecha_vencimiento", nullable = false)
     private LocalDateTime fechaVencimiento;
 
+    @Column(name = "aviso_enviado", nullable = false)
+    private boolean avisoEnviado = false;
+
     public Ocupacion() {
     }
 
@@ -80,5 +83,13 @@ public class Ocupacion {
 
     public void setFechaVencimiento(LocalDateTime fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public boolean isAvisoEnviado() {
+        return avisoEnviado;
+    }
+
+    public void setAvisoEnviado(boolean avisoEnviado) {
+        this.avisoEnviado = avisoEnviado;
     }
 }

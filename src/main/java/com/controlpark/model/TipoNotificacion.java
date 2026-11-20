@@ -1,7 +1,7 @@
 package com.controlpark.model;
 
 public enum TipoNotificacion {
-    AVISO_VENCIMIENTO,
-    AVISO_ADMINISTRADOR,
-    AVISO_ADMIN
+    CONFIRMAR_OCUPACION,
+    OCUPACION_EN_REVISION,
+    ESPACIO_LIBERADO
 }

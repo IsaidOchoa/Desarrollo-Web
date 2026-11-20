@@ -162,6 +162,12 @@ export function inicializarMapa(usuario) {
             return;
         }
 
+        if (usuario.rol === "ALUMNO" && espacio.zona === "DOCENTES") {
+            occupancyMessage.textContent =
+                "Este espacio es exclusivo para docentes.";
+            return;
+        }
+
         if (ocupacionActiva) {
             occupancyMessage.textContent =
                 "Ya tienes una ocupación activa. Debes liberar tu espacio actual antes de ocupar otro.";
@@ -255,7 +261,8 @@ export function inicializarMapa(usuario) {
                 distribucionMapa,
                 parkingSpaces,
                 elementosEspacio,
-                ocupacionActiva
+                ocupacionActiva,
+                usuario.rol === "ALUMNO"
             );
 
             actualizarVisibilidadFiltro();
