@@ -372,19 +372,6 @@ export function inicializarMapa(usuario) {
         cerrarSeleccion();
     }
 
-    function girarMapa(grados) {
-        anguloMapa = (anguloMapa + grados) % 360;
-        mapScene.setAttribute(
-            "transform",
-            `rotate(${anguloMapa} 600 380)`
-        );
-    }
-
-    function restablecerRotacion() {
-        anguloMapa = 0;
-        mapScene.setAttribute("transform", "rotate(0 600 380)");
-    }
-
     parkingSpaces.addEventListener("click", evento => {
         const elemento = evento.target.closest(".parking-space");
 
@@ -411,53 +398,9 @@ export function inicializarMapa(usuario) {
 
     const botonVistaMapa = document.querySelector('[data-view="map"]');
 
-    botonVistaMapa.addEventListener("click", async () => {
-        try {
-            await cargarDatosUsuario();
-
-            if (espacioSeleccionado) {
-                actualizarAcciones(espacioSeleccionado);
-            }
-        } catch (error) {
-            mapError.textContent =
-                error.message || "No fue posible actualizar los datos del usuario.";
-
-            mapError.classList.remove("hidden");
-        }
-    });
-
-    document.getElementById("refreshButton").addEventListener(
-        "click",
-        async () => {
-            try {
-                await cargarDatosUsuario();
-                await cargarEspacios(true);
-            } catch (error) {
-                mapError.textContent =
-                    error.message || "No fue posible actualizar los datos.";
-                mapError.classList.remove("hidden");
-            }
-        }
-    );
-
     document.getElementById("closeSelectionButton").addEventListener(
         "click",
         cerrarSeleccion
-    );
-
-    document.getElementById("rotateLeftButton").addEventListener(
-        "click",
-        () => girarMapa(-15)
-    );
-
-    document.getElementById("rotateRightButton").addEventListener(
-        "click",
-        () => girarMapa(15)
-    );
-
-    document.getElementById("resetRotationButton").addEventListener(
-        "click",
-        restablecerRotacion
     );
 
     async function iniciar() {

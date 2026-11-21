@@ -44,9 +44,12 @@ export function inicializarVehiculos(usuario) {
         const tarjeta = document.createElement("article");
         tarjeta.className = "vehicle-card";
 
-        const icono = document.createElement("div");
-        icono.className = "vehicle-icon";
-        icono.textContent = vehiculo.tipo === "MOTOCICLETA" ? "M" : "A";
+        const icono = vehiculo.tipo === "MOTOCICLETA"
+            ? "fa-motorcycle"
+            : "fa-car";
+
+        const iconoVehiculo = document.createElement("i");
+        iconoVehiculo.className = `fa-solid ${icono} vehicle-card-icon`; iconoVehiculo.setAttribute("aria-hidden", "true");
 
         const informacion = document.createElement("div");
         informacion.className = "vehicle-information";
@@ -61,7 +64,7 @@ export function inicializarVehiculos(usuario) {
         placas.textContent = vehiculo.placas;
 
         informacion.append(tipo, placas);
-        tarjeta.append(icono, informacion);
+        tarjeta.append(iconoVehiculo, informacion);
 
         return tarjeta;
     }

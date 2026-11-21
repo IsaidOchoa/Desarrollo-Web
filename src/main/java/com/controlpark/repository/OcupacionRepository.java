@@ -17,12 +17,14 @@ public interface OcupacionRepository extends JpaRepository<Ocupacion, Long> {
     Optional<Ocupacion> findByVehiculoIdVehiculo(Long idVehiculo);
 
     List<Ocupacion> findByAvisoEnviadoFalseAndFechaVencimientoBetween(
-        LocalDateTime inicio,
-        LocalDateTime fin
-    );
+            LocalDateTime inicio,
+            LocalDateTime fin);
 
     List<Ocupacion> findByAvisoEnviadoTrueAndFechaVencimientoLessThanEqualAndEspacio_EstadoNot(
-        LocalDateTime fecha,
-        EstadoEspacio estado
-    );
+            LocalDateTime fecha,
+            EstadoEspacio estado);
+
+    List<Ocupacion> findByAvisoEnviadoFalseAndFechaVencimientoLessThanEqual(
+            LocalDateTime fecha);
+
 }

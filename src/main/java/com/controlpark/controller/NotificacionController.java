@@ -66,13 +66,20 @@ public class NotificacionController {
         return ResponseEntity.ok(convertirAResponse(notificacion));
     }
 
-    private NotificacionResponse convertirAResponse(Notificacion notificacion) {
-        return new NotificacionResponse(
-                notificacion.getIdNotificacion(),
-                notificacion.getTipo(),
-                notificacion.getMensaje(),
-                notificacion.getFechaCreacion(),
-                notificacion.getEstado()
-        );
-    }
+    
+private NotificacionResponse convertirAResponse(Notificacion n) {
+    Long idOcupacion = n.getOcupacion() != null
+        ? n.getOcupacion().getIdOcupacion()
+        : null;
+
+    return new NotificacionResponse(
+        n.getIdNotificacion(),
+        idOcupacion,
+        n.getTipo(),
+        n.getMensaje(),
+        n.getFechaCreacion(),
+        n.getEstado()
+    );
+}
+
 }

@@ -10,14 +10,13 @@ export function inicializarNotificaciones(usuario) {
     if (inicializado) return;
     inicializado = true;
 
-    document.getElementById("refreshNotificationsButton")
-        .addEventListener("click", cargarNotificaciones);
-
     cargarNotificaciones();
 }
 
 export async function cargarNotificaciones() {
     const lista = document.getElementById("notificationsList");
+
+    if (!usuarioActual || !lista) return;
 
     lista.innerHTML = `
         <p class="notifications-loading">
@@ -54,10 +53,19 @@ function renderizarNotificaciones(notificaciones) {
         return;
     }
 
+    const esAdministrador = usuarioActual.rol === "ADMINISTRADOR";
+
     lista.innerHTML = notificaciones.map(notificacion => {
         const requiereRespuesta =
+            !esAdministrador &&
             notificacion.tipo === "CONFIRMAR_OCUPACION" &&
             notificacion.estado === "PENDIENTE";
+
+        const requiereLiberacion =
+            esAdministrador &&
+            notificacion.tipo === "OCUPACION_EN_REVISION" &&
+            notificacion.estado === "PENDIENTE" &&
+            notificacion.idOcupacion != null;
 
         const iconos = {
             CONFIRMAR_OCUPACION: "⏰",
@@ -72,14 +80,21 @@ function renderizarNotificaciones(notificaciones) {
         };
 
         return `
-            <article class="notification-card ${requiereRespuesta ? "notification-action" : ""}">
+            <article class="notification-card ${
+                requiereRespuesta || requiereLiberacion
+                    ? "notification-action"
+                    : ""
+            }">
                 <div class="notification-icon">
                     ${iconos[notificacion.tipo] || "●"}
                 </div>
 
                 <div class="notification-content">
                     <div class="notification-title">
-                        <h3>${nombres[notificacion.tipo] || "Notificación"}</h3>
+                        <h3>
+                            ${nombres[notificacion.tipo] || "Notificación"}
+                        </h3>
+
                         <span class="notification-status status-${notificacion.estado.toLowerCase()}">
                             ${obtenerNombreEstado(notificacion.estado)}
                         </span>
@@ -108,13 +123,28 @@ function renderizarNotificaciones(notificaciones) {
                             </button>
                         </div>
                     ` : ""}
+
+                    ${requiereLiberacion ? `
+                        <div class="notification-actions">
+                            <button
+                                class="primary-button"
+                                data-ocupacion="${notificacion.idOcupacion}"
+                                data-accion="liberar">
+                                Liberar espacio
+                            </button>
+                        </div>
+                    ` : ""}
                 </div>
             </article>
         `;
     }).join("");
 
-    lista.querySelectorAll("[data-id]").forEach(boton => {
+    lista.querySelectorAll("[data-continuar]").forEach(boton => {
         boton.addEventListener("click", responderNotificacion);
+    });
+
+    lista.querySelectorAll('[data-accion="liberar"]').forEach(boton => {
+        boton.addEventListener("click", liberarDesdeAdministrador);
     });
 }
 
@@ -139,6 +169,29 @@ async function responderNotificacion(evento) {
     } catch (error) {
         alert(error.message);
         botones.forEach(b => b.disabled = false);
+    }
+}
+
+async function liberarDesdeAdministrador(evento) {
+    const boton = evento.currentTarget;
+    const idOcupacion = boton.dataset.ocupacion;
+
+    if (!confirm("¿Deseas liberar este espacio de estacionamiento?")) {
+        return;
+    }
+
+    boton.disabled = true;
+
+    try {
+        await realizarSolicitud(
+            `/admin/ocupaciones/${idOcupacion}/liberar`,
+            "PUT"
+        );
+
+        await cargarNotificaciones();
+    } catch (error) {
+        alert(error.message);
+        boton.disabled = false;
     }
 }
 

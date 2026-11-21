@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ControlPark | Estacionamiento</title>
     <link rel="stylesheet" href="/css/mapa.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
     <div class="dashboard">
-        <aside class="sidebar">
+        <header class="topbar">
             <div class="brand">
                 <div class="brand-icon">P</div>
                 <div>
@@ -19,58 +20,34 @@
                 </div>
             </div>
 
-            <div class="user-session">
-                <span class="session-label">Sesión iniciada</span>
-                <strong id="userEmail"></strong>
-                <span id="userRole" class="user-role"></span>
-            </div>
-
-            <nav class="main-navigation">
-                <button class="nav-button active" data-view="map" type="button">
-                    <span>⌖</span>
-                    Mapa
-                </button>
-                <button class="nav-button" data-view="vehicles" type="button">
-                    <span>▣</span>
-                    Mis vehículos
-                </button>
-                <button class="nav-button" data-view="notifications" type="button">
-                    <span>♧</span>
-                    Notificaciones
-                </button>
-            </nav>
-
-            <button id="logoutButton" class="logout-button" type="button">
-                Cerrar sesión
-            </button>
-        </aside>
-
-        <main class="map-section">
-            <header class="page-header">
-                <div>
-                    <h2 id="pageTitle">Mapa del estacionamiento</h2>
+            <div class="topbar-session">
+                <div class="session-information">
+                    <strong id="userEmail"></strong>
+                    <span id="userRole" class="user-role"></span>
                 </div>
 
-                <button id="refreshButton" class="refresh-button" type="button">
-                    <span>↻</span>
-                    Actualizar
+                <button id="logoutButton" class="logout-button" type="button">
+                    Cerrar sesión
+                    <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                 </button>
-            </header>
+            </div>
+        </header>
 
+        <main class="map-section">
             <section id="mapView" class="content-view">
                 <div class="map-container">
 
                     <div class="map-toolbar">
                         <div class="vehicle-filter">
                             <button class="filter-button active" data-tipo="AUTOMOVIL" type="button">
-                                Automóviles
+                                <i class="fas fa-car" aria-hidden="true"></i>
+                                <span>Automóviles</span>
                             </button>
-
                             <button class="filter-button" data-tipo="MOTOCICLETA" type="button">
-                                Motocicletas
+                                <i class="fas fa-motorcycle" aria-hidden="true"></i>
+                                <span>Motocicletas</span>
                             </button>
                         </div>
-
                     </div>
 
                     <div id="mapLoading" class="map-message">
@@ -85,70 +62,57 @@
 
                     <svg id="parkingMap" viewBox="0 0 1200 900" role="img"
                         aria-label="Mapa isométrico del estacionamiento">
-
                         <g id="mapScene">
-
-                            <!-- Terreno -->
-
                             <g id="terrainLayer"></g>
-
-                            <!-- Calles e infraestructura -->
                             <g id="infrastructureLayer"></g>
-
-                            <!-- Zonas de estacionamiento -->
                             <g id="roadsLayer"></g>
-
-                            <!-- Edificios y construcciones -->
                             <g id="buildingsLayer"></g>
-
-                            <!-- Cajones -->
                             <g id="parkingSpaces"></g>
-
-                            <!-- Textos y señalización -->
                             <g id="labelsLayer"></g>
+                        </g>
                     </svg>
 
-                    <!-- Leyenda del mapa -->
+
                     <div class="map-legend">
-                        <span>
-                            <i class="legend-dot available"></i>
-                            Disponible
-                        </span>
+                        <div class="legend-item">
+                            <span class="legend-dot available"></span>
+                            <span>Disponibles</span>
+                            <strong id="availableCount">0</strong>
+                        </div>
 
-                        <span>
-                            <i class="legend-dot occupied"></i>
-                            Ocupado
-                        </span>
+                        <div class="legend-item">
+                            <span class="legend-dot occupied"></span>
+                            <span>Ocupados</span>
+                            <strong id="occupiedCount">0</strong>
+                        </div>
 
-                        <span>
-                            <i class="legend-dot review"></i>
-                            En revisión
-                        </span>
+                        <div class="legend-item">
+                            <span class="legend-dot review"></span>
+                            <span>En revisión</span>
+                            <strong id="reviewCount">0</strong>
+                        </div>
 
-                        <span>
-                            <i class="legend-dot unavailable"></i>
-                            Fuera de servicio
-                        </span>
+                        <div class="legend-item">
+                            <span class="legend-dot unavailable"></span>
+                            <span>Fuera de servicio</span>
+                            <strong id="outOfServiceCount">0</strong>
+                        </div>
 
-                        <span>
-                            <i class="legend-dot selected"></i>
-                            Tu espacio
-                        </span>
+                        <div class="legend-item own-space">
+                            <span class="legend-dot selected"></span>
+                            <span>Tu espacio</span>
+                        </div>
                     </div>
 
-                    <!-- Tarjeta flotante de selección -->
-                    <section id="selectionPanel" class="selection-panel hidden" aria-labelledby="selectedCode">
 
+                    <section id="selectionPanel" class="selection-panel hidden" aria-labelledby="selectedCode">
                         <div class="selection-header">
                             <div>
                                 <span class="eyebrow">ESPACIO SELECCIONADO</span>
                                 <h3 id="selectedCode">-</h3>
                             </div>
-
                             <button id="closeSelectionButton" class="close-button" type="button"
-                                aria-label="Cerrar selección">
-                                ×
-                            </button>
+                                aria-label="Cerrar selección">×</button>
                         </div>
 
                         <div class="selection-details">
@@ -156,12 +120,10 @@
                                 <span>Zona</span>
                                 <strong id="selectedZone">-</strong>
                             </div>
-
                             <div>
                                 <span>Tipo</span>
                                 <strong id="selectedType">-</strong>
                             </div>
-
                             <div>
                                 <span>Estado</span>
                                 <strong id="selectedStatus">-</strong>
@@ -172,9 +134,87 @@
                         <div id="occupancyMessage" class="occupancy-message"></div>
                     </section>
 
+                    <!-- Accesos flotantes -->
+                    <div class="map-tools">
+                        <div class="floating-tools">
+                            <button id="notificationsToggle" class="floating-tool" type="button"
+                                aria-label="Notificaciones" data-tooltip="Notificaciones">
+                                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                            </button>
+
+                            <button id="vehiclesToggle" class="floating-tool" type="button" aria-label="Mis vehículos"
+                                data-tooltip="Mis vehículos">
+                                <i class="fa-solid fa-car" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <aside id="sidePanel" class="side-panel" aria-label="Panel de herramientas">
+                            <div class="side-panel-header">
+                                <h2 id="sidePanelTitle">Notificaciones</h2>
+                                <button id="closeSidePanelButton" class="close-button" type="button"
+                                    aria-label="Cerrar panel">×</button>
+                            </div>
+
+                            <section id="notificationsView" class="panel-view hidden">
+                                <div class="notifications-container">
+                                    <div id="notificationsList" class="notifications-list">
+                                        <p class="notifications-loading">
+                                            Cargando notificaciones...
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section id="vehiclesView" class="panel-view hidden">
+                                <div class="vehicles-layout">
+                                    <header class="vehicles-heading">
+                                        <div>
+                                            <h3>Mis vehículos</h3>
+                                            <p>Administra los vehículos asociados a tu cuenta.</p>
+                                        </div>
+                                        <button id="addVehicleButton" class="add-vehicle-button" type="button">
+                                            + Registrar vehículo
+                                        </button>
+                                    </header>
+
+                                    <form id="vehicleForm" class="vehicle-form hidden">
+                                        <h4>Registrar nuevo vehículo</h4>
+
+                                        <div class="vehicle-form-fields">
+                                            <label>
+                                                Tipo de vehículo
+                                                <select id="vehicleType" required>
+                                                    <option value="">Selecciona un tipo</option>
+                                                    <option value="AUTOMOVIL">Automóvil</option>
+                                                    <option value="MOTOCICLETA">Motocicleta</option>
+                                                </select>
+                                            </label>
+
+                                            <label>
+                                                Placas
+                                                <input id="vehiclePlates" type="text" maxlength="15"
+                                                    placeholder="Ej. ABC-123" autocomplete="off" required>
+                                            </label>
+                                        </div>
+
+                                        <div class="vehicle-form-actions">
+                                            <button id="cancelVehicleButton" class="cancel-button"
+                                                type="button">Cancelar</button>
+                                            <button id="saveVehicleButton" class="add-vehicle-button"
+                                                type="submit">Guardar
+                                                vehículo</button>
+                                        </div>
+                                    </form>
+
+                                    <div id="vehicleMessage" class="vehicle-message" role="status"></div>
+                                    <div id="vehiclesList" class="vehicles-grid"></div>
+                                </div>
+                            </section>
+                        </aside>
+                    </div>
                 </div>
 
-                <!-- Resumen de disponibilidad -->
+
                 <section class="availability-section">
                     <div class="availability-heading">
                         <h3>Disponibilidad</h3>
@@ -182,118 +222,13 @@
                     </div>
 
                     <div class="availability-bar">
-                        <div id="availableBar" class="bar-segment available-bar">
-                        </div>
-
-                        <div id="occupiedBar" class="bar-segment occupied-bar">
-                        </div>
-
-                        <div id="reviewBar" class="bar-segment review-bar">
-                        </div>
-
-                        <div id="outOfServiceBar" class="bar-segment unavailable-bar">
-                        </div>
-                    </div>
-
-                    <div class="availability-counters">
-                        <div>
-                            <span class="counter-dot available"></span>
-                            Disponibles
-                            <strong id="availableCount">0</strong>
-                        </div>
-
-                        <div>
-                            <span class="counter-dot occupied"></span>
-                            Ocupados
-                            <strong id="occupiedCount">0</strong>
-                        </div>
-
-                        <div>
-                            <span class="counter-dot review"></span>
-                            En revisión
-                            <strong id="reviewCount">0</strong>
-                        </div>
-
-                        <div>
-                            <span class="counter-dot unavailable"></span>
-                            Fuera de servicio
-                            <strong id="outOfServiceCount">0</strong>
-                        </div>
+                        <div id="availableBar" class="bar-segment available-bar"></div>
+                        <div id="occupiedBar" class="bar-segment occupied-bar"></div>
+                        <div id="reviewBar" class="bar-segment review-bar"></div>
+                        <div id="outOfServiceBar" class="bar-segment unavailable-bar"></div>
                     </div>
                 </section>
-            </section>
 
-
-            <!-- Vista de vehículos -->
-            <section id="vehiclesView" class="content-view hidden">
-                <div class="vehicles-layout">
-                    <header class="vehicles-heading">
-                        <div>
-                            <h3>Mis vehículos</h3>
-                            <p>Administra los vehículos asociados a tu cuenta.</p>
-                        </div>
-
-                        <button id="addVehicleButton" class="add-vehicle-button" type="button">
-                            + Registrar vehículo
-                        </button>
-                    </header>
-
-                    <form id="vehicleForm" class="vehicle-form hidden">
-                        <h4>Registrar nuevo vehículo</h4>
-
-                        <div class="vehicle-form-fields">
-                            <label>
-                                Tipo de vehículo
-                                <select id="vehicleType" required>
-                                    <option value="">Selecciona un tipo</option>
-                                    <option value="AUTOMOVIL">Automóvil</option>
-                                    <option value="MOTOCICLETA">Motocicleta</option>
-                                </select>
-                            </label>
-
-                            <label>
-                                Placas
-                                <input id="vehiclePlates" type="text" maxlength="15" placeholder="Ej. ABC-123"
-                                    autocomplete="off" required>
-                            </label>
-                        </div>
-
-                        <div class="vehicle-form-actions">
-                            <button id="cancelVehicleButton" class="cancel-button" type="button">
-                                Cancelar
-                            </button>
-
-                            <button id="saveVehicleButton" class="add-vehicle-button" type="submit">
-                                Guardar vehículo
-                            </button>
-                        </div>
-                    </form>
-
-                    <div id="vehicleMessage" class="vehicle-message" role="status"></div>
-
-                    <div id="vehiclesList" class="vehicles-grid"></div>
-                </div>
-            </section>
-
-
-            <!-- Vista de notificaciones -->
-            <section id="notificationsView" class="content-view hidden">
-                <div class="notifications-container">
-                    <div class="notifications-header">
-                        <div>
-                            <h2>Notificaciones</h2>
-                            <p>Consulta los avisos relacionados con tu estacionamiento.</p>
-                        </div>
-                        <button id="refreshNotificationsButton" class="secondary-button">
-                            Actualizar
-                        </button>
-                    </div>
-
-                    <div id="notificationsList" class="notifications-list">
-                        <p class="notifications-loading">Cargando notificaciones...</p>
-                    </div>
-                </div>
-            </section>
         </main>
     </div>
 

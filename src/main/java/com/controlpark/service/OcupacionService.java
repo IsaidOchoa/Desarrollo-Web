@@ -13,6 +13,10 @@ import java.util.Optional;
 @Service
 public class OcupacionService {
 
+    // CONFIGURACIÓN TEMPORAL PARA PRUEBAS
+    private static final long DURACION_OCUPACION_SEGUNDOS = 30;
+    private static final long TIEMPO_RESPUESTA_SEGUNDOS = 60;
+
     private final OcupacionRepository ocupacionRepository;
     private final UsuarioRepository usuarioRepository;
     private final VehiculoRepository vehiculoRepository;
@@ -45,41 +49,50 @@ public class OcupacionService {
 
         if (!vehiculo.getUsuario().getIdUsuario().equals(idUsuario)) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "El vehículo no pertenece al usuario");
+                    HttpStatus.FORBIDDEN,
+                    "El vehículo no pertenece al usuario");
         }
 
         if (ocupacionRepository.findByUsuarioIdUsuario(idUsuario).isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El usuario ya tiene una ocupación activa");
+                    HttpStatus.CONFLICT,
+                    "El usuario ya tiene una ocupación activa");
         }
 
         if (ocupacionRepository.findByVehiculoIdVehiculo(idVehiculo).isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El vehículo ya tiene una ocupación activa");
+                    HttpStatus.CONFLICT,
+                    "El vehículo ya tiene una ocupación activa");
         }
 
         if (ocupacionRepository.findByEspacioIdEspacio(idEspacio).isPresent()) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El espacio ya está ocupado");
+                    HttpStatus.CONFLICT,
+                    "El espacio ya está ocupado");
         }
 
         if (espacio.getEstado() != EstadoEspacio.DISPONIBLE) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El espacio no está disponible");
+                    HttpStatus.CONFLICT,
+                    "El espacio no está disponible");
         }
 
         if (espacio.getTipoVehiculo() != vehiculo.getTipo()) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El tipo de vehículo no corresponde al espacio");
+                    HttpStatus.CONFLICT,
+                    "El tipo de vehículo no corresponde al espacio");
         }
 
-        if (usuario.getRol() == Rol.ALUMNO && espacio.getZona() != Zona.GENERAL) {
+        if (usuario.getRol() == Rol.ALUMNO
+                && espacio.getZona() != Zona.GENERAL) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Los alumnos solo pueden utilizar espacios generales");
         }
 
-        if (usuario.getRol() == Rol.DOCENTE && espacio.getZona() == Zona.GENERAL) {
+        if (usuario.getRol() == Rol.DOCENTE
+                && espacio.getZona() == Zona.GENERAL) {
+
             boolean hayEspaciosDocentes = espacioRepository
                     .findByZonaAndEstado(Zona.DOCENTES, EstadoEspacio.DISPONIBLE)
                     .stream()
@@ -93,7 +106,7 @@ public class OcupacionService {
         }
 
         LocalDateTime ahora = LocalDateTime.now();
-        LocalDateTime limite = ahora.toLocalDate().atTime(21, 45);
+        LocalDateTime limite = ahora.toLocalDate().atTime(21, 0);
 
         if (!ahora.isBefore(limite)) {
             throw new ResponseStatusException(
@@ -101,7 +114,7 @@ public class OcupacionService {
                     "No se permiten nuevas ocupaciones después de las 21:00");
         }
 
-        LocalDateTime vencimiento = ahora.plusHours(3);
+        LocalDateTime vencimiento = ahora.plusSeconds(DURACION_OCUPACION_SEGUNDOS);
 
         if (vencimiento.isAfter(limite)) {
             vencimiento = limite;
@@ -113,6 +126,7 @@ public class OcupacionService {
         ocupacion.setEspacio(espacio);
         ocupacion.setFechaInicio(ahora);
         ocupacion.setFechaVencimiento(vencimiento);
+        ocupacion.setAvisoEnviado(false);
 
         espacio.setEstado(EstadoEspacio.OCUPADO);
         espacioRepository.save(espacio);
@@ -128,23 +142,29 @@ public class OcupacionService {
     public Ocupacion extender(Long idUsuario) {
         Ocupacion ocupacion = ocupacionRepository.findByUsuarioIdUsuario(idUsuario)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "No tienes una ocupación activa"));
+                        HttpStatus.NOT_FOUND,
+                        "No tienes una ocupación activa"));
 
         LocalDateTime ahora = LocalDateTime.now();
 
-        if (ahora.isAfter(ocupacion.getFechaVencimiento())) {
+        LocalDateTime limiteRespuesta = ocupacion.getFechaVencimiento()
+                .plusSeconds(TIEMPO_RESPUESTA_SEGUNDOS);
+
+        if (ahora.isAfter(limiteRespuesta)) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El tiempo de respuesta ha terminado");
+                    HttpStatus.CONFLICT,
+                    "El tiempo de respuesta ha terminado");
         }
 
         LocalDateTime limite = ahora.toLocalDate().atTime(21, 0);
-        LocalDateTime nuevoVencimiento = ocupacion.getFechaVencimiento().plusHours(3);
+        LocalDateTime nuevoVencimiento =
+                ahora.plusSeconds(DURACION_OCUPACION_SEGUNDOS);
 
         if (nuevoVencimiento.isAfter(limite)) {
             nuevoVencimiento = limite;
         }
 
-        if (!nuevoVencimiento.isAfter(ocupacion.getFechaVencimiento())) {
+        if (!nuevoVencimiento.isAfter(ahora)) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "La ocupación ya alcanzó el límite de las 21:00");
@@ -160,7 +180,8 @@ public class OcupacionService {
     public void liberarPorUsuario(Long idUsuario) {
         Ocupacion ocupacion = ocupacionRepository.findByUsuarioIdUsuario(idUsuario)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "No tienes una ocupación activa"));
+                        HttpStatus.NOT_FOUND,
+                        "No tienes una ocupación activa"));
 
         liberarOcupacion(ocupacion);
     }
@@ -195,7 +216,8 @@ public class OcupacionService {
     private Ocupacion obtenerOcupacion(Long idOcupacion) {
         return ocupacionRepository.findById(idOcupacion)
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Ocupación no encontrada"));
+                        HttpStatus.NOT_FOUND,
+                        "Ocupación no encontrada"));
     }
 
     private void liberarOcupacion(Ocupacion ocupacion) {

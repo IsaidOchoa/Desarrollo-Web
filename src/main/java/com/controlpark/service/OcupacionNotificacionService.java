@@ -42,29 +42,37 @@ public class OcupacionNotificacionService {
 
         if (!notificacion.getUsuario().getIdUsuario().equals(idUsuario)) {
             throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN, "La notificación no pertenece al usuario");
+                    HttpStatus.FORBIDDEN,
+                    "La notificación no pertenece al usuario");
         }
 
         if (notificacion.getEstado() != EstadoNotificacion.PENDIENTE) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "La notificación ya fue atendida o expiró");
+                    HttpStatus.CONFLICT,
+                    "La notificación ya fue atendida o expiró");
         }
 
         if (notificacion.getTipo() != TipoNotificacion.CONFIRMAR_OCUPACION) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "Esta notificación no admite una respuesta de ocupación");
+                    HttpStatus.CONFLICT,
+                    "Esta notificación no admite una respuesta de ocupación");
         }
 
         Ocupacion ocupacion = notificacion.getOcupacion();
 
         if (ocupacion == null) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "La ocupación ya no está disponible");
+                    HttpStatus.CONFLICT,
+                    "La ocupación ya no está disponible");
         }
 
-        if (LocalDateTime.now().isAfter(ocupacion.getFechaVencimiento())) {
+        LocalDateTime limiteRespuesta =
+                ocupacion.getFechaVencimiento().plusMinutes(1);
+
+        if (LocalDateTime.now().isAfter(limiteRespuesta)) {
             throw new ResponseStatusException(
-                    HttpStatus.CONFLICT, "El tiempo para responder ha terminado");
+                    HttpStatus.CONFLICT,
+                    "El tiempo para responder ha terminado");
         }
 
         if (continuarOcupando) {
@@ -79,7 +87,7 @@ public class OcupacionNotificacionService {
         return notificacionRepository.save(notificacion);
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 5000)
     @Transactional
     public void revisarOcupaciones() {
         LocalDateTime ahora = LocalDateTime.now();
@@ -90,8 +98,7 @@ public class OcupacionNotificacionService {
 
     private void enviarAvisosDeVencimiento(LocalDateTime ahora) {
         List<Ocupacion> ocupaciones = ocupacionRepository
-                .findByAvisoEnviadoFalseAndFechaVencimientoBetween(
-                        ahora, ahora.plusMinutes(15));
+                .findByAvisoEnviadoFalseAndFechaVencimientoLessThanEqual(ahora);
 
         for (Ocupacion ocupacion : ocupaciones) {
             ocupacion.setAvisoEnviado(true);
@@ -101,14 +108,15 @@ public class OcupacionNotificacionService {
                     ocupacion.getUsuario().getIdUsuario(),
                     ocupacion.getIdOcupacion(),
                     TipoNotificacion.CONFIRMAR_OCUPACION,
-                    "Tu tiempo de ocupación está próximo a terminar. ¿Deseas continuar ocupando el espacio?");
+                    "Tu tiempo de ocupación ha terminado. ¿Deseas continuar ocupando el espacio?");
         }
     }
 
     private void revisarOcupacionesVencidas(LocalDateTime ahora) {
         List<Ocupacion> ocupaciones = ocupacionRepository
                 .findByAvisoEnviadoTrueAndFechaVencimientoLessThanEqualAndEspacio_EstadoNot(
-                        ahora, EstadoEspacio.EN_REVISION);
+                        ahora.minusMinutes(1),
+                        EstadoEspacio.EN_REVISION);
 
         for (Ocupacion ocupacion : ocupaciones) {
             Long idOcupacion = ocupacion.getIdOcupacion();
@@ -119,7 +127,9 @@ public class OcupacionNotificacionService {
                             idOcupacion,
                             TipoNotificacion.CONFIRMAR_OCUPACION,
                             EstadoNotificacion.PENDIENTE)
-                    .ifPresent(notificacion -> notificacionService.expirar(notificacion.getIdNotificacion()));
+                    .ifPresent(notificacion ->
+                            notificacionService.expirar(
+                                    notificacion.getIdNotificacion()));
 
             ocupacionService.marcarEnRevision(idOcupacion);
 
@@ -152,5 +162,4 @@ public class OcupacionNotificacionService {
                 TipoNotificacion.ESPACIO_LIBERADO,
                 "Tu espacio de estacionamiento ha sido liberado.");
     }
-
 }
