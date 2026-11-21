@@ -44,6 +44,9 @@ public class Notificacion {
     @Column(name = "fecha_respuesta")
     private LocalDateTime fechaRespuesta;
 
+    @Column(name = "leida", nullable = false)
+    private boolean leida = false;
+
     public Notificacion() {
     }
 
@@ -109,5 +112,13 @@ public class Notificacion {
 
     public void setFechaRespuesta(LocalDateTime fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
+    }
+
+    public boolean isLeida() {
+        return leida;
+    }
+
+    public void setLeida(boolean leida) {
+        this.leida = leida;
     }
 }

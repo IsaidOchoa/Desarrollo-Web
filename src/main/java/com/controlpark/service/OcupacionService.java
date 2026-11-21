@@ -21,16 +21,19 @@ public class OcupacionService {
     private final UsuarioRepository usuarioRepository;
     private final VehiculoRepository vehiculoRepository;
     private final EspacioRepository espacioRepository;
+    private final EventoSseService eventoSseService;
 
     public OcupacionService(
             OcupacionRepository ocupacionRepository,
             UsuarioRepository usuarioRepository,
             VehiculoRepository vehiculoRepository,
-            EspacioRepository espacioRepository) {
+            EspacioRepository espacioRepository,
+            EventoSseService eventoSseService) {
         this.ocupacionRepository = ocupacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.vehiculoRepository = vehiculoRepository;
         this.espacioRepository = espacioRepository;
+        this.eventoSseService = eventoSseService;
     }
 
     @Transactional
@@ -131,7 +134,11 @@ public class OcupacionService {
         espacio.setEstado(EstadoEspacio.OCUPADO);
         espacioRepository.save(espacio);
 
-        return ocupacionRepository.save(ocupacion);
+        Ocupacion guardada = ocupacionRepository.save(ocupacion);
+
+        eventoSseService.publicarMapaActualizado();
+
+        return guardada;
     }
 
     public Optional<Ocupacion> buscarPorUsuario(Long idUsuario) {
@@ -194,6 +201,7 @@ public class OcupacionService {
         espacio.setEstado(EstadoEspacio.EN_REVISION);
 
         espacioRepository.save(espacio);
+        eventoSseService.publicarMapaActualizado();
     }
 
     @Transactional
@@ -204,12 +212,12 @@ public class OcupacionService {
         espacio.setEstado(EstadoEspacio.OCUPADO);
 
         espacioRepository.save(espacio);
+        eventoSseService.publicarMapaActualizado();
     }
 
     @Transactional
     public void liberarPorAdministrador(Long idOcupacion) {
         Ocupacion ocupacion = obtenerOcupacion(idOcupacion);
-
         liberarOcupacion(ocupacion);
     }
 
@@ -226,5 +234,7 @@ public class OcupacionService {
 
         espacioRepository.save(espacio);
         ocupacionRepository.delete(ocupacion);
+
+        eventoSseService.publicarMapaActualizado();
     }
 }

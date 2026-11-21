@@ -1,3 +1,4 @@
+
 package com.controlpark.repository;
 
 import com.controlpark.model.Notificacion;
@@ -11,10 +12,18 @@ public interface NotificacionRepository extends JpaRepository<Notificacion, Long
 
     List<Notificacion> findByUsuarioIdUsuarioOrderByFechaCreacionDesc(Long idUsuario);
 
-    List<Notificacion> findByUsuarioIdUsuarioAndEstado(Long idUsuario, EstadoNotificacion estado);
+    List<Notificacion> findByUsuarioIdUsuarioAndEstado(
+        Long idUsuario,
+        EstadoNotificacion estado
+    );
+
+    List<Notificacion> findByUsuarioIdUsuarioAndLeidaFalse(Long idUsuario);
+
+    long countByUsuarioIdUsuarioAndLeidaFalse(Long idUsuario);
 
     Optional<Notificacion> findByOcupacion_IdOcupacionAndTipoAndEstado(
-            Long idOcupacion,
-            TipoNotificacion tipo,
-            EstadoNotificacion estado);
+        Long idOcupacion,
+        TipoNotificacion tipo,
+        EstadoNotificacion estado
+    );
 }

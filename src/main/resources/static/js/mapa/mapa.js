@@ -299,6 +299,25 @@ export function inicializarMapa(usuario) {
         }
     }
 
+    async function actualizarMapaPorEvento() {
+        try {
+            await cargarDatosUsuario();
+            await cargarEspacios(true);
+        } catch (error) {
+            console.error("No fue posible actualizar el mapa:", error);
+        }
+    }
+
+    const eventos = new EventSource(`/api/eventos/${idUsuario}`);
+
+    eventos.addEventListener("mapa-actualizado", () => {
+        actualizarMapaPorEvento();
+    });
+
+    eventos.onerror = () => {
+        console.warn("La conexión de eventos se interrumpió. Se intentará reconectar.");
+    };
+
     async function ocuparEspacio() {
         if (!espacioSeleccionado || procesandoOcupacion) return;
 

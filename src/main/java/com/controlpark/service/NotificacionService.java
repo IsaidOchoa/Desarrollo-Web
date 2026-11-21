@@ -14,14 +14,17 @@ public class NotificacionService {
     private final NotificacionRepository notificacionRepository;
     private final UsuarioRepository usuarioRepository;
     private final OcupacionRepository ocupacionRepository;
+    private final EventoSseService eventoSseService;
 
     public NotificacionService(
             NotificacionRepository notificacionRepository,
             UsuarioRepository usuarioRepository,
-            OcupacionRepository ocupacionRepository) {
+            OcupacionRepository ocupacionRepository,
+            EventoSseService eventoSseService) {
         this.notificacionRepository = notificacionRepository;
         this.usuarioRepository = usuarioRepository;
         this.ocupacionRepository = ocupacionRepository;
+        this.eventoSseService = eventoSseService;
     }
 
     public List<Notificacion> listarPorUsuario(Long idUsuario) {
@@ -32,6 +35,22 @@ public class NotificacionService {
     public List<Notificacion> listarPendientes(Long idUsuario) {
         return notificacionRepository
                 .findByUsuarioIdUsuarioAndEstado(idUsuario, EstadoNotificacion.PENDIENTE);
+    }
+
+    public long contarNoLeidas(Long idUsuario) {
+        return notificacionRepository.countByUsuarioIdUsuarioAndLeidaFalse(idUsuario);
+    }
+
+    @Transactional
+    public void marcarTodasComoLeidas(Long idUsuario) {
+        List<Notificacion> noLeidas =
+                notificacionRepository.findByUsuarioIdUsuarioAndLeidaFalse(idUsuario);
+
+        for (Notificacion notificacion : noLeidas) {
+            notificacion.setLeida(true);
+        }
+
+        notificacionRepository.saveAll(noLeidas);
     }
 
     @Transactional
@@ -50,6 +69,7 @@ public class NotificacionService {
         notificacion.setMensaje(mensaje);
         notificacion.setFechaCreacion(LocalDateTime.now());
         notificacion.setEstado(EstadoNotificacion.PENDIENTE);
+        notificacion.setLeida(false);
 
         if (idOcupacion != null) {
             Ocupacion ocupacion = ocupacionRepository.findById(idOcupacion)
@@ -58,7 +78,15 @@ public class NotificacionService {
             notificacion.setOcupacion(ocupacion);
         }
 
-        return notificacionRepository.save(notificacion);
+        Notificacion guardada = notificacionRepository.save(notificacion);
+
+        eventoSseService.publicarNotificacionNueva(
+                idUsuario,
+                guardada.getIdNotificacion(),
+                guardada.getTipo().name()
+        );
+
+        return guardada;
     }
 
     @Transactional
@@ -76,6 +104,7 @@ public class NotificacionService {
 
         notificacion.setEstado(EstadoNotificacion.ATENDIDA);
         notificacion.setFechaRespuesta(LocalDateTime.now());
+        notificacion.setLeida(true);
 
         return notificacionRepository.save(notificacion);
     }

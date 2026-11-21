@@ -15,12 +15,15 @@ public class EspacioService {
 
     private final EspacioRepository espacioRepository;
     private final OcupacionRepository ocupacionRepository;
+    private final EventoSseService eventoSseService;
 
     public EspacioService(
             EspacioRepository espacioRepository,
-            OcupacionRepository ocupacionRepository) {
+            OcupacionRepository ocupacionRepository,
+            EventoSseService eventoSseService) {
         this.espacioRepository = espacioRepository;
         this.ocupacionRepository = ocupacionRepository;
+        this.eventoSseService = eventoSseService;
     }
 
     public List<Espacio> listarTodos() {
@@ -86,6 +89,10 @@ public class EspacioService {
 
         espacio.setEstado(estado);
 
-        return espacioRepository.save(espacio);
+        Espacio actualizado = espacioRepository.save(espacio);
+
+        eventoSseService.publicarMapaActualizado();
+
+        return actualizado;
     }
 }

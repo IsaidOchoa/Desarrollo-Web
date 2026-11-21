@@ -11,6 +11,7 @@ public record NotificacionResponse(
     TipoNotificacion tipo,
     String mensaje,
     LocalDateTime fechaCreacion,
-    EstadoNotificacion estado
+    EstadoNotificacion estado,
+    boolean leida
 ) {
 }

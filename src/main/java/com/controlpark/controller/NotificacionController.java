@@ -51,6 +51,23 @@ public class NotificacionController {
         return ResponseEntity.ok(notificaciones);
     }
 
+    @GetMapping("/contador")
+    public ResponseEntity<Long> contarNoLeidas(
+            @PathVariable Long idUsuario) {
+
+        return ResponseEntity.ok(
+                notificacionService.contarNoLeidas(idUsuario)
+        );
+    }
+
+    @PutMapping("/leidas")
+    public ResponseEntity<Void> marcarTodasComoLeidas(
+            @PathVariable Long idUsuario) {
+
+        notificacionService.marcarTodasComoLeidas(idUsuario);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{idNotificacion}/respuesta")
     public ResponseEntity<NotificacionResponse> responder(
             @PathVariable Long idUsuario,
@@ -66,20 +83,19 @@ public class NotificacionController {
         return ResponseEntity.ok(convertirAResponse(notificacion));
     }
 
-    
-private NotificacionResponse convertirAResponse(Notificacion n) {
-    Long idOcupacion = n.getOcupacion() != null
-        ? n.getOcupacion().getIdOcupacion()
-        : null;
+    private NotificacionResponse convertirAResponse(Notificacion n) {
+        Long idOcupacion = n.getOcupacion() != null
+                ? n.getOcupacion().getIdOcupacion()
+                : null;
 
-    return new NotificacionResponse(
-        n.getIdNotificacion(),
-        idOcupacion,
-        n.getTipo(),
-        n.getMensaje(),
-        n.getFechaCreacion(),
-        n.getEstado()
-    );
-}
-
+        return new NotificacionResponse(
+                n.getIdNotificacion(),
+                idOcupacion,
+                n.getTipo(),
+                n.getMensaje(),
+                n.getFechaCreacion(),
+                n.getEstado(),
+                n.isLeida()
+        );
+    }
 }

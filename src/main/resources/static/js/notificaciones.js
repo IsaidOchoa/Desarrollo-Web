@@ -3,6 +3,7 @@ import { realizarSolicitud } from "./apiModule.js";
 
 let usuarioActual = null;
 let inicializado = false;
+let conexionEventos = null;
 
 export function inicializarNotificaciones(usuario) {
     usuarioActual = usuario;
@@ -11,6 +12,30 @@ export function inicializarNotificaciones(usuario) {
     inicializado = true;
 
     cargarNotificaciones();
+    actualizarContadorNotificaciones();
+    conectarEventos();
+}
+
+function conectarEventos() {
+    if (!usuarioActual || conexionEventos) return;
+
+    conexionEventos = new EventSource(
+        `/api/eventos/${usuarioActual.idUsuario}`
+    );
+
+    conexionEventos.addEventListener("notificacion-nueva", async () => {
+        if (panelNotificacionesAbierto()) {
+            await cargarNotificaciones();
+        } else {
+            await actualizarContadorNotificaciones();
+        }
+    });
+
+    conexionEventos.onerror = () => {
+        console.warn(
+            "La conexión de notificaciones se interrumpió. Se intentará reconectar."
+        );
+    };
 }
 
 export async function cargarNotificaciones() {
@@ -30,6 +55,21 @@ export async function cargarNotificaciones() {
         );
 
         renderizarNotificaciones(notificaciones);
+
+        if (
+            panelNotificacionesAbierto() &&
+            notificaciones.some(notificacion => !notificacion.leida)
+        ) {
+            await marcarNotificacionesLeidas();
+
+            notificaciones.forEach(notificacion => {
+                notificacion.leida = true;
+            });
+
+            renderizarNotificaciones(notificaciones);
+        }
+
+        await actualizarContadorNotificaciones();
     } catch (error) {
         lista.innerHTML = `
             <div class="notifications-empty">
@@ -40,8 +80,51 @@ export async function cargarNotificaciones() {
     }
 }
 
+export async function actualizarContadorNotificaciones() {
+    if (!usuarioActual) return;
+
+    const contador = document.getElementById("notificationBadge");
+    if (!contador) return;
+
+    try {
+        const cantidad = await realizarSolicitud(
+            `/notificaciones/${usuarioActual.idUsuario}/contador`
+        );
+
+        contador.textContent = cantidad > 99 ? "99+" : cantidad;
+        contador.hidden = cantidad <= 0;
+    } catch (error) {
+        console.error(
+            "No fue posible actualizar el contador:",
+            error
+        );
+    }
+}
+
+async function marcarNotificacionesLeidas() {
+    if (!usuarioActual) return;
+
+    await realizarSolicitud(
+        `/notificaciones/${usuarioActual.idUsuario}/leidas`,
+        "PUT"
+    );
+}
+
+function panelNotificacionesAbierto() {
+    const herramientas = document.querySelector(".map-tools");
+    const vistaNotificaciones = document.getElementById("notificationsView");
+
+    return (
+        herramientas?.classList.contains("open") &&
+        vistaNotificaciones &&
+        !vistaNotificaciones.classList.contains("hidden")
+    );
+}
+
 function renderizarNotificaciones(notificaciones) {
     const lista = document.getElementById("notificationsList");
+
+    if (!lista) return;
 
     if (!notificaciones.length) {
         lista.innerHTML = `
@@ -84,7 +167,7 @@ function renderizarNotificaciones(notificaciones) {
                 requiereRespuesta || requiereLiberacion
                     ? "notification-action"
                     : ""
-            }">
+            } ${!notificacion.leida ? "notification-unread" : ""}">
                 <div class="notification-icon">
                     ${iconos[notificacion.tipo] || "●"}
                 </div>
