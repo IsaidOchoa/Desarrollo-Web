@@ -1,4 +1,3 @@
-
 /* ========================================
    1. CONFIGURACIÓN GENERAL
 ======================================== */
@@ -82,8 +81,20 @@ button {
 
 
 /* ========================================
-   3. BARRA SUPERIOR
+   3. BARRA SUPERIOR Y SESIÓN
 ======================================== */
+
+.topbar {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 76px;
+    gap: 20px;
+    padding: 10px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+}
 
 .brand {
     display: flex;
@@ -91,6 +102,11 @@ button {
     gap: 13px;
     padding-bottom: 28px;
     border-bottom: 1px solid #e8edf2;
+}
+
+.topbar .brand {
+    padding: 0;
+    border: none;
 }
 
 .brand-icon {
@@ -119,6 +135,43 @@ button {
     font-size: 11px;
 }
 
+.topbar-session {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.session-information {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.session-information strong {
+    max-width: 300px;
+    overflow-wrap: anywhere;
+    color: #34445a;
+    font-size: 12px;
+}
+
+.session-label,
+.eyebrow {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.user-role {
+    align-self: flex-start;
+    padding: 5px 9px;
+    border-radius: 5px;
+    background: #eaf1f8;
+    color: #24527f;
+    font-size: 10px;
+    font-weight: bold;
+}
+
 .logout-button {
     display: inline-flex;
     align-items: center;
@@ -145,63 +198,9 @@ button {
     font-size: 14px;
 }
 
-.session-information {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.session-information strong {
-    max-width: 300px;
-    overflow-wrap: anywhere;
-    color: #34445a;
-    font-size: 12px;
-}
-
-.session-label,
-.eyebrow {
-    color: var(--muted);
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.topbar {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 76px;
-    gap: 20px;
-    padding: 10px 28px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-}
-
-.topbar .brand {
-    padding: 0;
-    border: none;
-}
-
-.topbar-session {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-}
-
-.user-role {
-    align-self: flex-start;
-    padding: 5px 9px;
-    border-radius: 5px;
-    background: #eaf1f8;
-    color: #24527f;
-    font-size: 10px;
-    font-weight: bold;
-}
-
 
 /* ========================================
-   4. MAPA
+   4. CONTENEDOR DEL MAPA
 ======================================== */
 
 .map-container {
@@ -263,7 +262,7 @@ button {
 }
 
 .zone-docentes {
-    fill: #b5c7d9;
+    fill: var(--teacher);
     stroke: #829bb9;
 }
 
@@ -286,10 +285,6 @@ button {
    6. CAJONES DE ESTACIONAMIENTO
 ======================================== */
 
-.motorcycle-space .space-label {
-    font-size: 8px;
-}
-
 .parking-space {
     cursor: pointer;
     transition: filter 0.15s;
@@ -304,15 +299,15 @@ button {
     stroke-width: 3;
 }
 
+.parking-space.space-selected .space-shape {
+    stroke: var(--primary);
+    stroke-width: 4;
+}
+
 .parking-space.my-space .space-shape {
     fill: #3ca7ff;
     stroke: #008cff;
     stroke-width: 2.5;
-}
-
-.parking-space.space-selected .space-shape {
-    stroke: var(--primary);
-    stroke-width: 4;
 }
 
 .parking-space.teacher-restricted {
@@ -336,8 +331,10 @@ button {
     stroke-width: 2;
 }
 
-.space-available {
-    fill: var(--available);
+.space-shape {
+    stroke: #ffffff;
+    stroke-width: 2;
+    transition: stroke 0.15s, filter 0.15s;
 }
 
 .space-label {
@@ -349,6 +346,14 @@ button {
     pointer-events: none;
 }
 
+.motorcycle-space .space-label {
+    font-size: 8px;
+}
+
+.space-available {
+    fill: var(--available);
+}
+
 .space-occupied {
     fill: var(--occupied);
 }
@@ -357,20 +362,41 @@ button {
     fill: var(--review);
 }
 
-.space-shape {
-    stroke: #ffffff;
-    stroke-width: 2;
-    transition: stroke 0.15s, filter 0.15s;
-}
-
 .space-unavailable {
     fill: var(--unavailable);
 }
 
 
 /* ========================================
-   7. BARRA DE FILTROS
+   7. BARRA DE FILTROS DEL MAPA
 ======================================== */
+
+.map-toolbar {
+    position: absolute;
+    z-index: 3;
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.map-toolbar > * {
+    pointer-events: auto;
+}
+
+.vehicle-filter {
+    display: flex;
+    gap: 4px;
+    padding: 5px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+    box-shadow: 0 3px 12px rgba(25, 45, 65, 0.14);
+}
 
 .filter-button {
     display: inline-flex;
@@ -405,37 +431,35 @@ button {
     font-size: 16px;
 }
 
-.map-toolbar {
-    position: absolute;
-    z-index: 3;
-    top: 16px;
-    right: 16px;
-    left: 16px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-    pointer-events: none;
-}
-
-.map-toolbar > * {
-    pointer-events: auto;
-}
-
-.vehicle-filter {
-    display: flex;
-    gap: 4px;
-    padding: 5px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
-    box-shadow: 0 3px 12px rgba(25, 45, 65, 0.14);
-}
-
 
 /* ========================================
    8. LEYENDA DEL MAPA
 ======================================== */
+
+.map-legend {
+    position: absolute;
+    z-index: 20;
+    top: 75%;
+    right: 1240px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    width: 235px;
+    padding: 10px 12px;
+    transform: translateY(-50%);
+    border: 1px solid #e1e7ef;
+    border-radius: 9px;
+    background: #ffffff;
+    box-shadow: 0 2px 7px rgba(30, 50, 75, 0.08);
+}
+
+.legend-item {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    min-height: 15px;
+}
 
 .counter-dot,
 .legend-dot {
@@ -444,6 +468,12 @@ button {
     width: 9px;
     height: 9px;
     border-radius: 50%;
+}
+
+.legend-dot {
+    width: 15px;
+    height: 9px;
+    border-radius: 2px;
 }
 
 .counter-dot.available,
@@ -467,32 +497,26 @@ button {
 }
 
 .legend-dot.selected {
-    background: #1769aa;
+    background: #3978d4;
 }
 
-.map-legend {
-    position: absolute;
-    z-index: 2;
-    bottom: 16px;
-    left: 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px 15px;
-    max-width: calc(100% - 32px);
-    padding: 10px 13px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 3px 12px rgba(25, 45, 65, 0.1);
-}
-
-.map-legend span {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.legend-item span {
     color: #526174;
-    font-size: 10px;
-    white-space: nowrap;
+    font-size: 11px;
+}
+
+.legend-item strong {
+    color: #243247;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.legend-item.own-space {
+    grid-template-columns: 16px 1fr;
+    padding-top: 6px;
+    border-top: 1px solid #edf0f4;
 }
 
 
@@ -522,24 +546,164 @@ button {
 
 
 /* ========================================
-   10. PANEL DE SELECCIÓN DE CAJÓN
+   10. DISPONIBILIDAD DEL ESTACIONAMIENTO
 ======================================== */
 
-.close-button {
+#mapView > .availability-section {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+}
+
+.availability-heading {
     display: flex;
     align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border: none;
-    border-radius: 6px;
-    background: #f1f4f7;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.availability-heading h3 {
+    color: #34445a;
+    font-size: 13px;
+}
+
+.availability-heading span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.availability-bar {
+    display: flex;
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #edf0f3;
+}
+
+.bar-segment {
+    display: block;
+    height: 100%;
+    transition: width 0.25s;
+}
+
+.available-bar {
+    background: var(--available);
+}
+
+.occupied-bar {
+    background: var(--occupied);
+}
+
+.review-bar {
+    background: var(--review);
+}
+
+.unavailable-bar {
+    background: var(--unavailable);
+}
+
+.availability-counters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+}
+
+.availability-counters > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     color: #718096;
+    font-size: 10px;
+}
+
+.availability-counters strong {
+    color: #34445a;
+    font-size: 11px;
+}
+
+
+/* ========================================
+   11. PANEL DE SELECCIÓN DE CAJÓN
+======================================== */
+
+#selectionPanel {
+    position: absolute;
+    z-index: 30;
+    top: 50%;
+    right: 20px;
+    bottom: auto;
+    left: auto;
+    width: min(320px, calc(100% - 40px));
+    margin: 0;
+    padding: 18px;
+    transform: translateY(-50%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
+    pointer-events: auto;
+}
+
+#selectionPanel.hidden {
+    display: none !important;
+}
+
+.selection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 13px;
+}
+
+.selection-header h3 {
+    margin-top: 5px;
+    color: var(--primary);
     font-size: 22px;
 }
 
-.close-button:hover {
-    background: #e5eaf0;
+.selection-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+}
+
+.selection-details > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.selection-details span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.selection-details strong {
+    color: #34445a;
+    font-size: 12px;
+}
+
+.selection-status-available {
+    color: var(--available) !important;
+}
+
+.selection-status-occupied {
+    color: var(--occupied) !important;
+}
+
+.selection-status-review {
+    color: var(--review) !important;
+}
+
+.selection-status-unavailable {
+    color: var(--unavailable) !important;
 }
 
 .occupancy-actions {
@@ -561,6 +725,15 @@ button {
     background: white;
     color: #34445a;
     font-size: 12px;
+}
+
+.vehicle-select-label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #526174;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .occupancy-button {
@@ -586,161 +759,14 @@ button {
 
 .occupancy-message {
     margin-top: 9px;
-    color: #718096;
+    color: #526174;
     font-size: 12px;
     line-height: 1.5;
 }
 
-.selection-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 28px;
-}
-
-.selection-details > div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.selection-details span {
-    color: var(--muted);
-    font-size: 11px;
-}
-
-.selection-details strong {
-    color: #34445a;
-    font-size: 12px;
-}
-
-.selection-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 13px;
-}
-
-.selection-header h3 {
-    margin-top: 5px;
-    color: var(--primary);
-    font-size: 22px;
-}
-
-.selection-panel {
-    position: absolute;
-    z-index: 20;
-    top: auto;
-    right: 20px;
-    bottom: 20px;
-    width: min(320px, calc(100% - 40px));
-    padding: 18px;
-    transform: none;
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    background: var(--surface);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.16);
-}
-
-.selection-panel.hidden {
-    display: none;
-}
-
-.vehicle-select-label {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    color: #526174;
-    font-size: 12px;
-    font-weight: 600;
-}
-
 
 /* ========================================
-   11. DISPONIBILIDAD
-======================================== */
-
-#mapView > .availability-section {
-    display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    gap: 10px;
-    padding: 12px 16px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
-}
-
-.availability-bar {
-    display: flex;
-    width: 100%;
-    height: 8px;
-    overflow: hidden;
-    border-radius: 10px;
-    background: #edf0f3;
-}
-
-.availability-counters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 20px;
-}
-
-.availability-counters > div {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #718096;
-    font-size: 10px;
-}
-
-.availability-counters strong {
-    color: #34445a;
-    font-size: 11px;
-}
-
-.availability-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.availability-heading h3 {
-    color: #34445a;
-    font-size: 13px;
-}
-
-.availability-heading span {
-    color: var(--muted);
-    font-size: 11px;
-}
-
-.available-bar {
-    background: var(--available);
-}
-
-.bar-segment {
-    display: block;
-    height: 100%;
-    transition: width 0.25s;
-}
-
-.occupied-bar {
-    background: var(--occupied);
-}
-
-.review-bar {
-    background: var(--review);
-}
-
-.unavailable-bar {
-    background: var(--unavailable);
-}
-
-
-/* ========================================
-   12. CONTENEDOR DE HERRAMIENTAS Y PANEL
+   12. ACCESOS FLOTANTES Y PANEL LATERAL
 ======================================== */
 
 .map-tools {
@@ -753,16 +779,19 @@ button {
     align-items: flex-start;
     gap: 12px;
     height: calc(100% - 40px);
+    pointer-events: none;
 }
 
-.map-tools.open {
-    transform: translateX(0);
-    opacity: 1;
-    visibility: visible;
-    transition:
-        transform 0.3s ease,
-        opacity 0.3s ease,
-        visibility 0s;
+.floating-tools,
+.map-tools .side-panel {
+    pointer-events: auto;
+}
+
+.floating-tools {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .floating-tool {
@@ -822,44 +851,75 @@ button {
     visibility: visible;
 }
 
-.floating-tools {
+.notification-badge {
+    position: absolute;
+    z-index: 2;
+    top: -5px;
+    right: -5px;
     display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.notification-badge[hidden] {
+    display: none;
 }
 
 
 /* ========================================
-   13. PANEL LATERAL
+   13. PANEL LATERAL: ESTRUCTURA Y CIERRE
 ======================================== */
 
-.panel-view {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 0;
-    padding: 16px;
-    overflow-y: auto;
-}
-
-.panel-view.hidden {
-    display: none !important;
-}
-
 .side-panel {
-    position: relative;
     display: flex;
-    flex: 0 1 auto;
+    flex: 0 0 0;
     flex-direction: column;
-    width: min(390px, calc(100vw - 100px));
+    width: 0;
     min-width: 0;
-    min-height: 0;
     height: 100%;
+    min-height: 0;
+    padding: 0;
     overflow: hidden;
-    border-left: 1px solid var(--border);
-    background: white;
-    box-shadow: -8px 0 25px rgba(25, 45, 65, 0.16);
+    border: 0;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        width 0.3s ease,
+        flex-basis 0.3s ease,
+        padding 0.3s ease,
+        opacity 0.3s ease,
+        visibility 0s linear 0.3s;
+}
+
+.map-tools.open .side-panel {
+    flex-basis: 390px;
+    width: 390px;
+    padding: 16px;
+    border: 1px solid #e1e7ef;
+    box-shadow: -8px 0 25px rgba(30, 50, 75, 0.10);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+        width 0.3s ease,
+        flex-basis 0.3s ease,
+        padding 0.3s ease,
+        opacity 0.3s ease,
+        visibility 0s linear 0s;
 }
 
 .side-panel-header {
@@ -877,199 +937,43 @@ button {
     font-size: 17px;
 }
 
-
-/* ========================================
-   14. VEHÍCULOS
-======================================== */
-
-.add-vehicle-button,
-.cancel-button {
-    min-height: 39px;
-    padding: 0 15px;
-    border: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.add-vehicle-button {
-    background: var(--primary);
-    color: white;
-}
-
-.add-vehicle-button:hover {
-    background: var(--primary-hover);
-}
-
-.add-vehicle-button:disabled {
-    opacity: 0.6;
-    cursor: wait;
-}
-
-.cancel-button {
-    background: #edf0f4;
-    color: #526174;
-}
-
-.vehicle-card {
+.close-button {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    min-height: 95px;
-    padding: 17px;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    background: white;
-}
-
-.vehicle-card-icon {
-    display: flex;
-    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: #edf4ff;
-    color: #2563eb;
-    font-size: 23px;
-}
-
-.vehicle-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: #f9fafc;
-}
-
-.vehicle-form h4 {
-    color: var(--primary);
-    font-size: 15px;
-}
-
-.vehicle-form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 9px;
-}
-
-.vehicle-form-fields {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 15px;
-}
-
-.vehicle-form-fields label {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    color: #526174;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.vehicle-form-fields input,
-.vehicle-form-fields select {
-    width: 100%;
-    min-height: 40px;
-    padding: 0 11px;
-    border: 1px solid #d5dce5;
+    width: 30px;
+    height: 30px;
+    border: none;
     border-radius: 6px;
-    outline: none;
-    background: white;
-    color: var(--text);
-    font: inherit;
+    background: #f1f4f7;
+    color: #718096;
+    font-size: 22px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-.vehicle-form-fields input:focus,
-.vehicle-form-fields select:focus {
-    border-color: var(--primary);
-}
-
-.vehicle-information {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.vehicle-information h4 {
-    color: #243247;
-    font-size: 15px;
-}
-
-.vehicle-information .vehicle-type {
-    color: #64748b;
-    font-size: 12px;
-}
-
-.vehicle-message {
-    min-height: 16px;
-    color: var(--muted);
-    font-size: 12px;
-}
-
-.vehicle-message.error {
-    color: #c0392b;
-}
-
-.vehicle-message.success {
-    color: #258653;
-}
-
-.vehicle-type {
-    color: var(--muted);
-    font-size: 11px;
-}
-
-.vehicles-empty {
-    grid-column: 1 / -1;
-    padding: 35px 15px;
-    border: 1px dashed var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-size: 13px;
-    text-align: center;
-}
-
-.vehicles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    align-content: start;
-    gap: 14px;
-}
-
-.vehicles-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-}
-
-.vehicles-heading h3 {
+.close-button:hover {
+    background: #e5eaf0;
     color: var(--primary);
-    font-size: 19px;
 }
 
-.vehicles-heading p {
-    margin-top: 6px;
-    color: var(--muted);
-    font-size: 12px;
-}
 
-.vehicles-layout {
+/* ========================================
+   14. VISTAS DEL PANEL LATERAL
+======================================== */
+
+.panel-view {
     display: flex;
     flex: 1;
     flex-direction: column;
+    width: 100%;
+    min-width: 0;
     min-height: 0;
-    gap: 20px;
-    padding: 22px;
+    padding: 16px;
     overflow-y: auto;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: white;
+}
+
+.panel-view.hidden {
+    display: none !important;
 }
 
 
@@ -1077,97 +981,10 @@ button {
    15. NOTIFICACIONES
 ======================================== */
 
-.notification-action {
-    border-left: 4px solid #3182ce;
-}
-
-.notification-card {
-    display: flex;
-    gap: 16px;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: white;
-}
-
-.notification-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.notification-content > p {
-    color: #4a5568;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.notification-date {
-    display: block;
-    margin-top: 12px;
-    color: #718096;
-    font-size: 12px;
-}
-
-.notification-icon {
-    display: flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: #edf2f7;
-    font-size: 19px;
-}
-
-.notification-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-
-.notification-title h3 {
-    color: #2d3748;
-    font-size: 15px;
-}
-
-.notification-status {
-    padding: 4px 9px;
-    border-radius: 20px;
-    background: #edf2f7;
-    color: #4a5568;
-    font-size: 11px;
-    white-space: nowrap;
-}
-
-.notification-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 16px;
-}
-
 .notifications-container {
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
-}
-
-.notifications-empty,
-.notifications-loading {
-    padding: 40px 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    background: white;
-    color: #718096;
-    text-align: center;
-}
-
-.notifications-empty p {
-    margin-bottom: 8px;
-    color: #4a5568;
 }
 
 .notifications-header {
@@ -1193,6 +1010,113 @@ button {
     flex-direction: column;
     gap: 14px;
 }
+
+.notification-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+}
+
+.notification-action {
+    border-left: 4px solid #3182ce;
+}
+
+.notification-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #edf2f7;
+    font-size: 19px;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.notification-title h3 {
+    color: #2d3748;
+    font-size: 15px;
+}
+
+.notification-content > p {
+    color: #4a5568;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.notification-date {
+    display: block;
+    margin-top: 12px;
+    color: #718096;
+    font-size: 12px;
+}
+
+.notification-status {
+    padding: 4px 9px;
+    border-radius: 20px;
+    background: #edf2f7;
+    color: #4a5568;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.status-atendida {
+    background: #f0fff4;
+    color: #276749;
+}
+
+.status-expirada {
+    background: #fff5f5;
+    color: #c53030;
+}
+
+.status-pendiente {
+    background: #ebf8ff;
+    color: #2b6cb0;
+}
+
+.notification-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.notifications-empty,
+.notifications-loading {
+    padding: 40px 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: white;
+    color: #718096;
+    text-align: center;
+}
+
+.notifications-empty p {
+    margin-bottom: 8px;
+    color: #4a5568;
+}
+
+
+/* ========================================
+   16. BOTONES DE ACCIONES Y FORMULARIOS
+======================================== */
 
 .primary-button,
 .secondary-button {
@@ -1228,49 +1152,240 @@ button {
     background: #e1e7ee;
 }
 
-.status-atendida {
-    background: #f0fff4;
-    color: #276749;
+
+/* ========================================
+   17. VEHÍCULOS
+======================================== */
+
+.vehicles-layout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    gap: 20px;
+    padding: 22px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
 }
 
-.status-expirada {
-    background: #fff5f5;
-    color: #c53030;
+.vehicles-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
 }
 
-.status-pendiente {
-    background: #ebf8ff;
-    color: #2b6cb0;
+.vehicles-heading h3 {
+    color: var(--primary);
+    font-size: 19px;
+}
+
+.vehicles-heading p {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.vehicles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    align-content: start;
+    gap: 14px;
+}
+
+.vehicle-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-height: 95px;
+    padding: 17px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: white;
+}
+
+.vehicle-card-icon {
+    position: relative;
+    display: block;
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    margin: 0;
+    border-radius: 12px;
+    background: #edf4ff;
+    color: #2563eb;
+    font-size: 28px;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.vehicle-card-icon::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+.vehicle-information {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.vehicle-information h4 {
+    color: #243247;
+    font-size: 15px;
+}
+
+.vehicle-information .vehicle-type {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.vehicle-type {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.vehicles-empty {
+    grid-column: 1 / -1;
+    padding: 35px 15px;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
 }
 
 
 /* ========================================
-   16. AJUSTES DE VEHÍCULOS Y NOTIFICACIONES
+   18. REGISTRO DE VEHÍCULOS
+======================================== */
+
+.add-vehicle-button,
+.cancel-button {
+    min-height: 39px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.add-vehicle-button {
+    background: var(--primary);
+    color: white;
+}
+
+.add-vehicle-button:hover {
+    background: var(--primary-hover);
+}
+
+.add-vehicle-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.cancel-button {
+    background: #edf0f4;
+    color: #526174;
+}
+
+.vehicle-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #f9fafc;
+}
+
+.vehicle-form h4 {
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.vehicle-form-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.vehicle-form-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #526174;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.vehicle-form-fields input,
+.vehicle-form-fields select {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 11px;
+    border: 1px solid #d5dce5;
+    border-radius: 6px;
+    outline: none;
+    background: white;
+    color: var(--text);
+    font: inherit;
+}
+
+.vehicle-form-fields input:focus,
+.vehicle-form-fields select:focus {
+    border-color: var(--primary);
+}
+
+.vehicle-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+}
+
+.vehicle-message {
+    min-height: 16px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.vehicle-message:empty {
+    display: none;
+}
+
+.vehicle-message.error {
+    color: #c0392b;
+}
+
+.vehicle-message.success {
+    color: #258653;
+}
+
+
+/* ========================================
+   19. AJUSTES DE NOTIFICACIONES Y VEHÍCULOS
    DENTRO DEL PANEL LATERAL
 ======================================== */
 
-.panel-view .add-vehicle-button,
-.panel-view .cancel-button {
-    min-height: 38px;
-}
-
-.panel-view .notification-actions {
-    flex-direction: column;
-    gap: 8px;
-}
-
-.panel-view .notification-actions button {
+.panel-view .notifications-container {
     width: 100%;
-    min-height: 36px;
+    max-width: none;
+    margin: 0;
+}
+
+.panel-view .notifications-list {
+    gap: 12px;
 }
 
 .panel-view .notification-card {
     gap: 11px;
     padding: 13px;
-}
-
-.panel-view .notification-content > p {
-    font-size: 12px;
 }
 
 .panel-view .notification-icon {
@@ -1289,10 +1404,18 @@ button {
     font-size: 13px;
 }
 
-.panel-view .notifications-container {
+.panel-view .notification-content > p {
+    font-size: 12px;
+}
+
+.panel-view .notification-actions {
+    flex-direction: column;
+    gap: 8px;
+}
+
+.panel-view .notification-actions button {
     width: 100%;
-    max-width: none;
-    margin: 0;
+    min-height: 36px;
 }
 
 .panel-view .notifications-empty,
@@ -1301,8 +1424,23 @@ button {
     font-size: 12px;
 }
 
-.panel-view .notifications-list {
+.panel-view .vehicles-layout {
+    flex: 0 0 auto;
+    gap: 18px;
+    padding: 0;
+    overflow: visible;
+    border: none;
+}
+
+.panel-view .vehicles-heading {
+    align-items: stretch;
+    flex-direction: column;
     gap: 12px;
+}
+
+.panel-view .vehicles-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
 }
 
 .panel-view .vehicle-card {
@@ -1314,248 +1452,28 @@ button {
     padding: 14px;
 }
 
-.panel-view .vehicle-form-actions {
-    flex-wrap: wrap;
-}
-
 .panel-view .vehicle-form-fields {
     grid-template-columns: 1fr;
 }
 
-.panel-view .vehicles-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
+.panel-view .vehicle-form-actions {
+    flex-wrap: wrap;
 }
 
-.panel-view .vehicles-heading {
-    align-items: stretch;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.panel-view .vehicles-heading h3 {
-    font-size: 16px;
-}
-
-.panel-view .vehicles-heading p {
-    line-height: 1.5;
-}
-
-.panel-view .vehicles-layout {
-    flex: 0 0 auto;
-    gap: 18px;
-    padding: 0;
-    overflow: visible;
-    border: none;
+.panel-view .add-vehicle-button,
+.panel-view .cancel-button {
+    min-height: 38px;
 }
 
 
 /* ========================================
-   LEYENDA DEL MAPA
-======================================== */
-
-.map-legend {
-    position: absolute;
-    top: 75%;
-    right: 20px;
-    transform: translateY(-50%);
-    z-index: 20;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    width: 235px;
-    padding: 10px 12px;
-    border: 1px solid #e1e7ef;
-    border-radius: 9px;
-    background: #ffffff;
-    box-shadow: 0 2px 7px rgba(30, 50, 75, 0.08);
-}
-
-.legend-item {
-    display: grid;
-    grid-template-columns: 16px 1fr auto;
-    align-items: center;
-    gap: 8px;
-    min-height: 15px;
-}
-
-.legend-dot {
-    width: 15px;
-    height: 9px;
-    border-radius: 2px;
-}
-
-.legend-dot.available {
-    background: #36a269;
-}
-
-.legend-dot.occupied {
-    background: #d64b4b;
-}
-
-.legend-dot.review {
-    background: #e4a43a;
-}
-
-.legend-dot.unavailable {
-    background: #8994a2;
-}
-
-.legend-dot.selected {
-    background: #3978d4;
-}
-
-.legend-item span {
-    font-size: 11px;
-    color: #526174;
-}
-
-.legend-item strong {
-    font-size: 11px;
-    font-weight: 600;
-    color: #243247;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-}
-
-.legend-item.own-space {
-    grid-template-columns: 16px 1fr;
-    padding-top: 6px;
-    border-top: 1px solid #edf0f4;
-}
-
-
-/* ========================================
-   ACCESOS FLOTANTES Y PANEL LATERAL
-======================================== */
-
-.map-tools {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 32;
-
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: flex-start;
-    gap: 12px;
-}
-
-/* Botones: siempre visibles y fijos */
-
-.floating-tools {
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    gap: 12px;
-}
-
-/* Panel cerrado por defecto */
-
-.side-panel {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 0;
-    width: 0;
-    min-width: 0;
-    height: 100%;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 10px;
-
-    overflow: hidden;
-    background: #ffffff;
-    box-shadow: none;
-
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-
-    transition:
-        width 0.3s ease,
-        flex-basis 0.3s ease,
-        padding 0.3s ease,
-        opacity 0.3s ease,
-        visibility 0s linear 0.3s;
-}
-
-.map-tools.open .side-panel {
-    flex-basis: 390px;
-    width: 390px;
-    padding: 16px;
-    border: 1px solid #e1e7ef;
-
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-
-    box-shadow: -8px 0 25px rgba(30, 50, 75, 0.10);
-
-    transition:
-        width 0.3s ease,
-        flex-basis 0.3s ease,
-        padding 0.3s ease,
-        opacity 0.3s ease,
-        visibility 0s linear 0s;
-}
-
-
-/* Contenido de las vistas */
-
-.panel-view {
-    width: 100%;
-    min-width: 0;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.panel-view.hidden {
-    display: none !important;
-}
-.floating-tool {
-    position: relative;
-}
-
-.notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    min-width: 19px;
-    height: 19px;
-    padding: 0 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid #ffffff;
-    border-radius: 20px;
-    background: #dc2626;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1;
-    z-index: 2;
-}
-
-.notification-badge[hidden] {
-    display: none;
-}
-
-
-/* ========================================
-   17. RESPONSIVE
-   Todas las media queries quedan al final
+   20. DISEÑO RESPONSIVE
 ======================================== */
 
 @media (max-width: 850px) {
     .map-legend {
-        bottom: 10px;
-        left: 10px;
-        gap: 7px 10px;
-    }
-
-    .map-legend span {
-        font-size: 9px;
+        right: 12px;
+        gap: 7px;
     }
 
     .map-toolbar {
@@ -1572,96 +1490,6 @@ button {
 }
 
 @media (max-width: 650px) {
-    .availability-counters {
-        flex-direction: row;
-        gap: 8px 12px;
-    }
-
-    .floating-tool {
-        width: 42px;
-        height: 42px;
-        flex-basis: 42px;
-    }
-
-    .floating-tools {
-        gap: 7px;
-    }
-
-    .map-legend {
-        bottom: 8px;
-        left: 8px;
-        max-width: calc(100% - 65px);
-        gap: 6px 9px;
-        padding: 8px;
-    }
-
-    .map-legend span {
-        font-size: 8px;
-    }
-
-    .map-section {
-        padding: 9px;
-    }
-
-    .notification-card {
-        gap: 12px;
-        padding: 14px;
-    }
-
-    .notification-title {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .notifications-header {
-        align-items: flex-start;
-    }
-
-    .notification-actions {
-        flex-direction: column;
-    }
-
-    .notification-actions button {
-        width: 100%;
-    }
-
-    .occupancy-actions {
-        align-items: stretch;
-        flex-direction: column;
-    }
-
-    .occupancy-actions select,
-    .occupancy-button {
-        width: 100%;
-    }
-
-    .panel-view {
-        padding: 12px;
-    }
-
-    .selection-details {
-        gap: 10px 18px;
-    }
-
-    .selection-panel {
-        padding: 14px;
-    }
-
-    .session-information {
-        align-items: flex-end;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .session-information strong {
-        max-width: 145px;
-        font-size: 9px;
-    }
-
-    .side-panel {
-        width: min(340px, calc(100vw - 80px));
-    }
-
     .topbar {
         min-height: 65px;
         gap: 8px;
@@ -1701,6 +1529,27 @@ button {
         gap: 8px;
     }
 
+    .session-information {
+        align-items: flex-end;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .session-information strong {
+        max-width: 145px;
+        font-size: 9px;
+    }
+
+    .map-section {
+        padding: 9px;
+    }
+
+    .map-toolbar {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+    }
+
     .vehicle-filter {
         flex: 1;
         min-width: 0;
@@ -1711,6 +1560,86 @@ button {
         min-width: 0;
         padding: 9px 5px;
         font-size: 10px;
+    }
+
+    .floating-tool {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .floating-tools {
+        gap: 7px;
+    }
+
+    .map-legend {
+        right: 8px;
+        width: min(235px, calc(100% - 65px));
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .legend-item {
+        gap: 6px;
+    }
+
+    .legend-item span,
+    .legend-item strong {
+        font-size: 10px;
+    }
+
+    .availability-counters {
+        flex-direction: row;
+        gap: 8px 12px;
+    }
+
+    .selection-details {
+        gap: 10px 18px;
+    }
+
+    #selectionPanel {
+        padding: 14px;
+    }
+
+    .occupancy-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .occupancy-actions select,
+    .occupancy-button {
+        width: 100%;
+    }
+
+    .panel-view {
+        padding: 12px;
+    }
+
+    .notification-card {
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .notification-title {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .notifications-header {
+        align-items: flex-start;
+    }
+
+    .notification-actions {
+        flex-direction: column;
+    }
+
+    .notification-actions button {
+        width: 100%;
+    }
+
+    .map-tools.open .side-panel {
+        flex-basis: min(340px, calc(100vw - 80px));
+        width: min(340px, calc(100vw - 80px));
     }
 
     .vehicle-form-actions {

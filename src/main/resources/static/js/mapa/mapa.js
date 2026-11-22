@@ -117,6 +117,7 @@ export function inicializarMapa(usuario) {
         actualizarContadores();
     }
 
+
     function mostrarSeleccion(espacio, elemento) {
         if (elementoSeleccionado) {
             elementoSeleccionado.classList.remove("space-selected");
@@ -133,11 +134,31 @@ export function inicializarMapa(usuario) {
             obtenerNombreZona(espacio.zona);
         document.getElementById("selectedType").textContent =
             obtenerNombreTipo(espacio.tipoVehiculo);
-        document.getElementById("selectedStatus").textContent =
-            obtenerNombreEstado(espacio.estado);
+
+        const estadoElemento = document.getElementById("selectedStatus");
+
+        const clasesEstado = {
+            DISPONIBLE: "selection-status-available",
+            OCUPADO: "selection-status-occupied",
+            EN_REVISION: "selection-status-review",
+            FUERA_SERVICIO: "selection-status-unavailable"
+        };
+
+        estadoElemento.textContent = obtenerNombreEstado(espacio.estado);
+
+        estadoElemento.classList.remove(
+            ...Object.values(clasesEstado)
+        );
+
+        const claseEstado = clasesEstado[espacio.estado];
+
+        if (claseEstado) {
+            estadoElemento.classList.add(claseEstado);
+        }
 
         actualizarAcciones(espacio);
     }
+
 
     function actualizarAcciones(espacio) {
         occupancyActions.replaceChildren();
@@ -391,7 +412,7 @@ export function inicializarMapa(usuario) {
         cerrarSeleccion();
     }
 
-    parkingSpaces.addEventListener("click", evento => {
+    parkingSpaces.addEventListener("click", (evento) => {
         const elemento = evento.target.closest(".parking-space");
 
         if (!elemento || !parkingSpaces.contains(elemento)) {
@@ -415,12 +436,18 @@ export function inicializarMapa(usuario) {
         });
     });
 
-    const botonVistaMapa = document.querySelector('[data-view="map"]');
+    const botonCerrar = document.getElementById("closeSelectionButton");
 
-    document.getElementById("closeSelectionButton").addEventListener(
-        "click",
-        cerrarSeleccion
-    );
+    if (botonCerrar) {
+        botonCerrar.addEventListener("click", (evento) => {
+            evento.preventDefault();
+            evento.stopPropagation();
+            console.log("Clic en cerrar");
+            cerrarSeleccion();
+        });
+    } else {
+        console.error("No se encontró el botón closeSelectionButton");
+    }
 
     async function iniciar() {
         try {
