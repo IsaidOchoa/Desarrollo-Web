@@ -1114,6 +1114,36 @@ button {
 }
 
 
+.notifications-delete-container {
+    display: flex;
+    justify-content: center;
+    padding: 18px 0 8px;
+}
+
+.notifications-delete-button {
+    padding: 10px 16px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fff;
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.notifications-delete-button:hover {
+    background: #fef2f2;
+    border-color: #f87171;
+}
+
+.notifications-delete-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+
 /* ========================================
    16. BOTONES DE ACCIONES Y FORMULARIOS
 ======================================== */
@@ -1368,6 +1398,49 @@ button {
 }
 
 
+.vehicle-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex: 0 0 auto;
+}
+
+.vehicle-action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: white;
+    color: #64748b;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.edit-vehicle-button:hover {
+    background: #edf4ff;
+    border-color: #bfdbfe;
+    color: #eb9c25;
+}
+
+.delete-vehicle-button:hover {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+.vehicle-action-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+
 /* ========================================
    19. AJUSTES DE NOTIFICACIONES Y VEHÍCULOS
    DENTRO DEL PANEL LATERAL
@@ -1472,7 +1545,7 @@ button {
 
 @media (max-width: 850px) {
     .map-legend {
-        right: 12px;
+        right: 480px;
         gap: 7px;
     }
 

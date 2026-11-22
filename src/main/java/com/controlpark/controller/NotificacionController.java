@@ -68,6 +68,16 @@ public class NotificacionController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/eliminables")
+    public ResponseEntity<Integer> eliminarEliminables(
+            @PathVariable Long idUsuario) {
+
+        int eliminadas =
+                notificacionService.eliminarNotificacionesEliminables(idUsuario);
+
+        return ResponseEntity.ok(eliminadas);
+    }
+
     @PostMapping("/{idNotificacion}/respuesta")
     public ResponseEntity<NotificacionResponse> responder(
             @PathVariable Long idUsuario,

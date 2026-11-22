@@ -329,15 +329,7 @@ export function inicializarMapa(usuario) {
         }
     }
 
-    const eventos = new EventSource(`/api/eventos/${idUsuario}`);
-
-    eventos.addEventListener("mapa-actualizado", () => {
-        actualizarMapaPorEvento();
-    });
-
-    eventos.onerror = () => {
-        console.warn("La conexión de eventos se interrumpió. Se intentará reconectar.");
-    };
+    window.addEventListener("mapa-actualizado", actualizarMapaPorEvento);
 
     async function ocuparEspacio() {
         if (!espacioSeleccionado || procesandoOcupacion) return;

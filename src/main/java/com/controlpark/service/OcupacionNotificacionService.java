@@ -87,7 +87,7 @@ public class OcupacionNotificacionService {
         return notificacionRepository.save(notificacion);
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     @Transactional
     public void revisarOcupaciones() {
         LocalDateTime ahora = LocalDateTime.now();

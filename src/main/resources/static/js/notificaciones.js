@@ -31,6 +31,10 @@ function conectarEventos() {
         }
     });
 
+    conexionEventos.addEventListener("mapa-actualizado", () => {
+        window.dispatchEvent(new CustomEvent("mapa-actualizado"));
+    });
+
     conexionEventos.onerror = () => {
         console.warn(
             "La conexión de notificaciones se interrumpió. Se intentará reconectar."
@@ -121,6 +125,25 @@ function panelNotificacionesAbierto() {
     );
 }
 
+function esEliminable(notificacion) {
+    const esAdministrador = usuarioActual.rol === "ADMINISTRADOR";
+
+    if (esAdministrador) {
+        const requiereLiberacion =
+            notificacion.tipo === "OCUPACION_EN_REVISION" &&
+            notificacion.estado === "PENDIENTE" &&
+            notificacion.idOcupacion != null;
+
+        return !requiereLiberacion;
+    }
+
+    return (
+        notificacion.estado === "EXPIRADA" ||
+        notificacion.estado === "ATENDIDA" ||
+        notificacion.tipo === "ESPACIO_LIBERADO"
+    );
+}
+
 function renderizarNotificaciones(notificaciones) {
     const lista = document.getElementById("notificationsList");
 
@@ -163,10 +186,9 @@ function renderizarNotificaciones(notificaciones) {
         };
 
         return `
-            <article class="notification-card ${
-                requiereRespuesta || requiereLiberacion
-                    ? "notification-action"
-                    : ""
+            <article class="notification-card ${requiereRespuesta || requiereLiberacion
+                ? "notification-action"
+                : ""
             } ${!notificacion.leida ? "notification-unread" : ""}">
                 <div class="notification-icon">
                     ${iconos[notificacion.tipo] || "●"}
@@ -229,6 +251,52 @@ function renderizarNotificaciones(notificaciones) {
     lista.querySelectorAll('[data-accion="liberar"]').forEach(boton => {
         boton.addEventListener("click", liberarDesdeAdministrador);
     });
+
+    const cantidadEliminable = notificaciones.filter(esEliminable).length;
+
+    if (cantidadEliminable > 0) {
+        const contenedor = document.createElement("div");
+        contenedor.className = "notifications-delete-container";
+
+        const botonEliminar = document.createElement("button");
+        botonEliminar.type = "button";
+        botonEliminar.className = "notifications-delete-button";
+        botonEliminar.textContent = "Eliminar notificaciones";
+        botonEliminar.addEventListener("click", eliminarNotificaciones);
+
+        contenedor.appendChild(botonEliminar);
+        lista.appendChild(contenedor);
+    }
+}
+
+async function eliminarNotificaciones(evento) {
+    const boton = evento.currentTarget;
+
+    if (!confirm("¿Deseas eliminar todas las notificaciones que ya pueden eliminarse?")) {
+        return;
+    }
+
+    boton.disabled = true;
+    boton.textContent = "Eliminando...";
+
+    try {
+        const cantidad = await realizarSolicitud(
+            `/notificaciones/${usuarioActual.idUsuario}/eliminables`,
+            "DELETE"
+        );
+
+        await cargarNotificaciones();
+
+        alert(
+            cantidad === 1
+                ? "Se eliminó 1 notificación."
+                : `Se eliminaron ${cantidad} notificaciones.`
+        );
+    } catch (error) {
+        alert(error.message || "No fue posible eliminar las notificaciones.");
+        boton.disabled = false;
+        boton.textContent = "Eliminar notificaciones";
+    }
 }
 
 async function responderNotificacion(evento) {

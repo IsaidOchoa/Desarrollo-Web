@@ -54,6 +54,56 @@ public class NotificacionService {
     }
 
     @Transactional
+    public int eliminarNotificacionesEliminables(Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        boolean esAdministrador = usuario.getRol() == Rol.ADMINISTRADOR;
+
+        List<Notificacion> notificaciones =
+                notificacionRepository
+                        .findByUsuarioIdUsuarioOrderByFechaCreacionDesc(idUsuario);
+
+        List<Notificacion> eliminables = notificaciones.stream()
+                .filter(notificacion -> esEliminable(notificacion, esAdministrador))
+                .toList();
+
+        if (eliminables.isEmpty()) {
+            return 0;
+        }
+
+        notificacionRepository.deleteAll(eliminables);
+
+        return eliminables.size();
+    }
+
+    private boolean esEliminable(
+        Notificacion notificacion,
+        boolean esAdministrador) {
+
+    boolean ocupacionEliminada =
+            notificacion.getTipo() == TipoNotificacion.OCUPACION_EN_REVISION &&
+            notificacion.getOcupacion() == null;
+
+    if (ocupacionEliminada) {
+        return true;
+    }
+
+    if (esAdministrador) {
+        boolean requiereLiberacion =
+                notificacion.getTipo() == TipoNotificacion.OCUPACION_EN_REVISION &&
+                notificacion.getEstado() == EstadoNotificacion.PENDIENTE &&
+                notificacion.getOcupacion() != null;
+
+        return !requiereLiberacion;
+    }
+
+    return notificacion.getEstado() == EstadoNotificacion.EXPIRADA ||
+            notificacion.getEstado() == EstadoNotificacion.ATENDIDA ||
+            notificacion.getTipo() == TipoNotificacion.ESPACIO_LIBERADO;
+}
+
+    @Transactional
     public Notificacion crear(
             Long idUsuario,
             Long idOcupacion,
