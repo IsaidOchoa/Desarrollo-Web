@@ -189,7 +189,7 @@ const MAPA = {
             separacion: 16
         },
 
-        // Estacionamiento para docentes: 40 automóviles
+        // Estacionamiento para docentes: 32 automóviles
         {
             prefijo: "D-",
             zona: "DOCENTES",
@@ -208,7 +208,7 @@ const MAPA = {
             zona: "DOCENTES",
             tipo: "AUTOMOVIL",
             cantidad: 16,
-            inicio: 21,
+            inicio: 17,
             x: 680,
             y: 770,
             orientacion: "VERTICAL",
